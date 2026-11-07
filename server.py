@@ -10,6 +10,8 @@ import time
 from http import cookies
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from collections import deque
+from research import EvidenceStore, ResearchError
 from urllib.parse import urlparse
 from engine import KnowledgeEngine, run_evaluation
 
@@ -22,6 +24,7 @@ SESSIONS = {}  # browser token -> (KnowledgeEngine, last_access). Ephemeral free
 LOCK = threading.RLock()
 MAX_SESSIONS = 300
 MAX_FACTS = 250
+RESEARCH_RATES = deque()  # global public API protection; max 7 imports / minute
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -48,6 +51,16 @@ class Handler(BaseHTTPRequestHandler):
             eng, _ = SESSIONS[sid]
             SESSIONS[sid] = (eng, now)
             return eng
+
+    def check_origin(self):
+        """Reject cross-site POSTs even if browsers include the session cookie."""
+        origin = self.headers.get('Origin')
+        if origin:
+            expected_host = self.headers.get('X-Forwarded-Host') or self.headers.get('Host', '')
+            if origin not in ('https://' + expected_host, 'http://' + expected_host):
+                self.send_json(403, {'error':'Cross-origin requests are not accepted'})
+                return False
+        return True
 
     def headers_common(self):
         self.send_header('Cache-Control', 'no-store')
@@ -80,17 +93,23 @@ class Handler(BaseHTTPRequestHandler):
             self.wfile.write(raw)
         elif path == '/api/health':
             self.send_json(200, {'ok': True, 'engine': 'symbolic', 'external_ai': False, 'public_sessions': PUBLIC})
-        elif path in ('/api/knowledge', '/api/tests'):
+        elif path in ('/api/knowledge', '/api/tests', '/api/research/topics', '/api/research/review'):
             with LOCK:
                 eng = self.engine()
-                self.send_json(200, eng.export_knowledge() if path == '/api/knowledge' else run_evaluation(eng))
+                store = EvidenceStore(eng.conn)
+                if path == '/api/knowledge': result = eng.export_knowledge()
+                elif path == '/api/tests': result = run_evaluation(eng)
+                elif path == '/api/research/topics': result = {'ok':True,'topics':store.topics(),'sourced_claims':store.claim_count()}
+                else: result = store.review()
+                self.send_json(200, result)
         else:
             self.send_json(404, {'error': 'Not found'})
 
     def do_POST(self):
         path = urlparse(self.path).path
-        if path not in ('/api/ask', '/api/teach', '/api/alias', '/api/reset'):
+        if path not in ('/api/ask', '/api/teach', '/api/alias', '/api/reset', '/api/research/search', '/api/research/learn', '/api/research/reset'):
             return self.send_json(404, {'error': 'Not found'})
+        if not self.check_origin(): return
         if not self.headers.get('Content-Type', '').lower().startswith('application/json'):
             return self.send_json(415, {'error': 'Expected application/json'})
         try:
@@ -106,8 +125,43 @@ class Handler(BaseHTTPRequestHandler):
                 eng = self.engine()
                 if path in ('/api/teach', '/api/alias') and eng.count() >= MAX_FACTS:
                     return self.send_json(429, {'error': 'Knowledge limit reached for this demo session'})
-                if path == '/api/ask':
-                    result = eng.query(str(body.get('question', '')))
+                store = EvidenceStore(eng.conn)
+                if path.startswith('/api/research/'):
+                    if path in ('/api/research/search', '/api/research/learn'):
+                        now = time.monotonic()
+                        while RESEARCH_RATES and RESEARCH_RATES[0] < now - 60:
+                            RESEARCH_RATES.popleft()
+                        if len(RESEARCH_RATES) >= 7:
+                            return self.send_json(429, {'error':'Shared research rate limit reached; retry in one minute.'})
+                        RESEARCH_RATES.append(now)
+                    if path == '/api/research/search':
+                        result = store.search(str(body.get('topic','')))
+                    elif path == '/api/research/learn':
+                        if len(store.topics()) >= 15 and str(body.get('qid','')) not in [t['qid'] for t in store.topics()]:
+                            return self.send_json(429, {'error':'This demo allows 15 researched topics per session.'})
+                        result = store.learn(str(body.get('qid','')))
+                    else: result = store.reset()
+                elif path == '/api/ask':
+                    question=str(body.get('question', ''))
+                    result = store.ask(question) or eng.query(question)
+                    if body.get('auto_research') is True and result['status'] in ('unknown','unsupported'):
+                        now = time.monotonic()
+                        while RESEARCH_RATES and RESEARCH_RATES[0] < now - 60:
+                            RESEARCH_RATES.popleft()
+                        if len(RESEARCH_RATES) < 7:
+                            RESEARCH_RATES.append(now)
+                            try:
+                                discovery = store.suggest_auto_research(question)
+                                if discovery and discovery.get('learned'):
+                                    result = store.ask(question) or result
+                                    result['auto_researched'] = discovery
+                                elif discovery:
+                                    result['research_hint'] = 'Cannot safely resolve the entity. Use the Research tab to select the correct topic.'
+                            except ResearchError as exc:
+                                result['research_hint'] = str(exc)
+                        else:
+                            result['research_hint'] = 'Shared research rate limit; try again later.'
+                    result['fact_count'] = eng.count() + store.claim_count()
                 elif path == '/api/teach':
                     result = eng.teach(str(body.get('statement', '')))
                 elif path == '/api/alias':
@@ -115,6 +169,8 @@ class Handler(BaseHTTPRequestHandler):
                 else:
                     result = eng.reset()
                 self.send_json(200, result)
+        except ResearchError as exc:
+            self.send_json(422, {'error':str(exc)})
         except Exception as exc:
             print('Server error:', type(exc).__name__, str(exc))
             self.send_json(500, {'error': 'Internal error'})

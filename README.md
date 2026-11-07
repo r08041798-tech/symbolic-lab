@@ -1,79 +1,79 @@
-# Symbolic Lab: an explainable Python reasoning experiment
+# Symbolic Lab v2 — Research without an LLM
 
-**No LLM, neural network, pretrained NLP model, paid API, or external API calls.** This is a deliberately limited symbolic knowledge engine, not a general conversational AI.
+An experimental Python knowledge engine and mobile-friendly single-page UI. No neural networks, pretrained models, embeddings or AI inference services. **The Internet is a source of claims, not a truth oracle.**
 
-## Instant HTML preview (no Python required)
+## What's new in v2
 
-Open `instant_preview.html` directly in any browser to try a lightweight **JavaScript adaptation** of the Python rules. It has a question input, a teach-fact input, reasoning traces and reset. It only keeps changes while the page remains open. **The real persistent implementation is Python and requires the Python server below.**
+- **Research tab:** Search public Wikidata entities by name. Select the exact item (QID), which avoids silently choosing the wrong "Mercury", "Python", etc.
+- **Structured knowledge acquisition:** Import an explicit whitelist of about 20 Wikidata properties, plus up to four hops of category and taxonomic parent relationships. Each claim retains a source URL, property and retrieval time.
+- **Opt-in automatic research:** The Ask page can try an exact Wikidata match for an unknown subject. Ambiguous or non-matching names are not silently selected.
+- **Answer construction:** Ask constrained natural-language queries about capital cities, countries, creators, descriptions, and taxonomic or subclass membership. An answer includes the relevant stored source claims and any multi-step proof chain.
+- **Correction:** Refresh a QID to replace claims retrieved for that entity; subsequent inferences are recomputed and do not reuse old conclusions.
+- **Contradiction detection:** A small review checks for **direct** conflicts between user-provided negative category assertions and imported Wikidata statements. This is not general fact-checking.
+- **Separate visitor memory:** The hosted demo uses per-browser temporary SQLite databases. Browser localStorage remembers up to four topic IDs and attempts to re-import them if Render restarts.
+- **Honest unknowns:** Missing evidence produces "unknown", not a guessed answer. Unsupported language stays unsupported.
 
-## Start the app
+## How to run locally
 
-Requires **Python 3.10+**. No `pip install` needed.
+Requires Python 3.10+ and no third-party Python packages.
 
 ```bash
 python server.py
 ```
 
-Open **http://127.0.0.1:8765** in your browser. The app has four tabs:
-
-- **Ask & reason** — questions and transparent proof steps.
-- **Teach the engine** — add facts such as `A robin is a bird`, or aliases such as `little bird → sparrow`.
-- **Evaluate** — execute 28 reference checks, with detailed pass/fail outcomes.
-- **Knowledge graph** — search stored claims, see sources, and reset the demo.
-
-All knowledge is saved in `knowledge.sqlite3`, created automatically next to `server.py`. Delete that database while the app is stopped to start fresh, or use the Reset demo button.
-
-## What to test first
-
-1. Ask `Is a robin an animal?` → **UNKNOWN**.
-2. Teach `A robin is a bird` → the engine stores this user-provided claim.
-3. Ask `Is a robin an animal?` again → **YES**, with proof `robin → bird → animal`.
-4. Ask `Can robins fly?` → **UNKNOWN**. This is not automatically derivable from being a bird.
-5. Teach `A robin can fly` and ask again → **YES**.
-6. Teach `A robin cannot fly` → the system should **reject the direct contradiction**.
-7. Ask `Are all birds penguins?` → **NO**, using an explicit sparrow counterexample.
-8. Try `Write about rain and hope` → a *limited template-based* creative output.
-
-## Design
-
-- `engine.py` — parses a small subset of English into `(subject, relation, object, polarity)`, maintains a directed graph of `is_a` relationships, performs breadth-first proof search, inherits non-category properties, and generates natural-language explanations.
-- `server.py` — Python standard-library local HTTP server with JSON API.
-- `web/index.html` — single-page frontend with input, output, proof inspection, teaching, and evaluation.
-- `tests.py` — independent Python unit tests.
-
-### API
-
-- `POST /api/ask` `{"question":"Is Alphonso a fruit?"}`
-- `POST /api/teach` `{"statement":"A robin is a bird"}`
-- `POST /api/alias` `{"phrase":"little bird","target":"sparrow"}`
-- `GET /api/knowledge`
-- `GET /api/tests`
-- `POST /api/reset` `{}` (erases taught knowledge)
-- `GET /api/health`
-
-## Limitations and accuracy honesty
-
-- This does **not** understand unrestricted English. It supports a small subset of question and statement forms; unsupported input is rejected.
-- A yes/no answer is justified by a *stored knowledge path*, not independent real-world fact checking.
-- User-submitted facts are source-labelled `user asserted`; they are not externally verified. Direct contradictory triples are rejected, but more complex inconsistencies can remain undetected.
-- The reasoning engine assumes subclass inheritance in its knowledge graph. Some properties are not naturally inheritable; use domain modelling carefully.
-- The creative composer is procedural, with restricted vocabulary, associations, and templates; it is nowhere near LLM-level writing.
-- Aliases are exact lexical aliases, not semantic similarity or neural embeddings.
-- The built-in evaluation uses fixed reference expectations. It demonstrates correctness for a constrained suite and is not proof of general intelligence. Test with **new, independently labelled questions** and track coverage and false certainty.
-- This server binds to `127.0.0.1` for personal local use only. It has no authentication and should not be exposed on a public network.
-
-## Run Python tests
+Open http://127.0.0.1:8765. For a production-like session:
 
 ```bash
-python -m unittest -v
+HOST=0.0.0.0 PORT=8765 python server.py
 ```
 
-## How this can improve
+Open http://localhost:8765. Be aware this is a **prototype**; do not expose it to untrusted users in sensitive settings.
 
-Learning here is deterministic: the knowledge graph and alias table grow from explicit human-provided statements. It can solve *new* questions by combining those statements, without memorising every question-answer pair. Future research steps include source validation, provenance audits, a grammar parser, typed relations, rule mining, confidence calibration, novelty tests, contradiction handling, and test-set contamination controls. These are meaningful engineering challenges — not automatically solved by adding data.
+## How to try it
 
-## Deploying read-only on Render Free
+1. In **Research internet**, search `France`, select the matching Wikidata entry, and press Learn.
+2. Go to Ask and ask `What is the capital of France?`. The response shows a source link to the relevant Wikidata assertion.
+3. Search and import `cheetah`, then ask `Is a cheetah a mammal?`. The system will only say yes if an imported structured hierarchy actually establishes the chain; otherwise it says unknown. Property chains and labels vary by source.
+4. Refresh a topic and see that claims are replaced; the system recomputes conclusions instead of memorizing the previous answer.
+5. Use Evaluate for the original 28 fixed legacy tests; run independent new questions to assess generalization.
 
-This project includes `render.yaml`. To deploy, push the source folder to a Git repository accessible to Render, then create a Blueprint from that repository or a free Python web service with start command `HOST=0.0.0.0 python server.py` and health endpoint `/api/health`. It will listen on Render's `PORT`.
+**Important:** The Wikidata connection requires an internet connection on the server. Our automated testing of the research engine uses an injected test provider, not live Wikidata access. The live external API must be verified after deployment.
 
-**Security:** When `HOST` is not `127.0.0.1`, teaching, aliases and reset are disabled unless the `SYMBOLIC_ADMIN_TOKEN` environment variable is set and an Authorization: Bearer token is supplied. Never put that token in public frontend code. The public deployment is intentionally read-only by default. Free-tier SQLite files on ephemeral storage are *not* persistent across redeploys/restarts. For genuine persistent multi-user teaching, add login and persistent database storage first. Local use still allows teaching and keeps knowledge in SQLite.
+## Deployment: updates to existing Render service
+
+The existing Render service at https://symbolic-lab-demo.onrender.com automatically deploys new commits on the GitHub repository. Its current build command is:
+
+```
+mkdir -p web && cp index.html web/index.html
+```
+
+The repository's `index.html` must be the latest frontend. In the *root* of the GitHub repository `r08041798-tech/symbolic-lab`, replace `server.py` and `index.html` and add `research.py` and `test_research.py`. All are in the small `symbolic_lab_v2_update.zip` archive. Commit changes and let Render auto-deploy. (The existing `engine.py` stays unchanged.)
+
+## API additions
+
+- `POST /api/research/search` `{ "topic": "France" }`: returns up to five search choices.
+- `POST /api/research/learn` `{ "qid": "Q142" }`: downloads bounded related claims for a specific item.
+- `GET /api/research/topics`: learned topics and source claim count.
+- `GET /api/research/review`: limited direct contradiction review.
+- `POST /api/research/reset` `{}`: clears the research evidence for the current browser session.
+
+The original Ask, Teach, Evaluate and Knowledge APIs remain available.
+
+## Safety and limitations
+
+- An item appearing on Wikidata **does not certify its truth**. The engine does not yet corroborate statements against independent primary evidence or verify citations. Source-based correctness and world truth are not the same.
+- Only a tiny typed subset of entities and properties is supported; no reliable unrestricted natural-language understanding or reasoning from arbitrary webpages.
+- A classification chain combines Wikidata `instance of`, `subclass of`, and `parent taxon` links as a limited symbolic inference. It can be semantically too broad when source modeling is incomplete.
+- The engine cannot disambiguate all entities using free-text questions. Search and learn an exact Wikidata QID first.
+- Real-world status can change. Research shows fetch timestamps and may be stale until refreshed.
+- Automated tests cover deterministic behavior using synthetic data. They are not measurements of open-world factual accuracy or general intelligence.
+- The Render free plan sleeps during inactivity and has ephemeral storage. Browser backup is limited and not guaranteed. Avoid entering sensitive information.
+- Wikimedia imposes API limits and requires identification via User-Agent. The app rate limits external searches/imports and uses timeouts.
+
+## Tests
+
+```bash
+python -m unittest discover -v
+```
+
+24 tests currently: 11 original reasoning tests and 13 new research tests, including multi-hop evidence, refusal of unsupported conclusions, ambiguity, provenance, stale-claim replacement, direct contradiction review, and malformed QID rejection. All 24 passed locally before packaging.
