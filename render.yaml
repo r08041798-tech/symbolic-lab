@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: symbolic-lab-demo
+    runtime: python
+    plan: free
+    region: singapore
+    buildCommand: echo 'No third-party dependencies'
+    startCommand: HOST=0.0.0.0 python server.py
+    healthCheckPath: /api/health
