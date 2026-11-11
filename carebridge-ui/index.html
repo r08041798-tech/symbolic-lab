@@ -272,25 +272,59 @@ document.addEventListener("click",function(e){
  var a=b.dataset.a;
  if(a==="close"){$("overlay").classList.remove("show");return}
  if(a==="save"){
+
+ if(action==="clinic-add"||action.indexOf("clinic-edit:")===0){
+  var cname=$("modal-clinic-name")?.value.trim(),clocation=$("modal-clinic-location")?.value.trim(),cstart=$("modal-clinic-start")?.value,cend=$("modal-clinic-end")?.value,cbuf=Number($("modal-clinic-buffer")?.value);
+  if(!cname||!clocation)return msg("Enter a clinic name and location.");
+  if(!Number.isFinite(clockMinutes(cstart))||!Number.isFinite(clockMinutes(cend))||clockMinutes(cend)<=clockMinutes(cstart))return msg("Clinic end time must be later than start time.");
+  if(!Number.isFinite(cbuf)||cbuf<0||cbuf>240)return msg("Choose a travel allowance between 0 and 240 minutes.");
+  if(action==="clinic-add"){
+   doctorClinics.push({id:"c"+Date.now(),name:cname,location:clocation,start:cstart,end:cend,buffer:cbuf,active:true});
+  }else{
+   var cid=action.split(":")[1],c=doctorClinics.find(function(x){return x.id===cid});
+   if(!c)return msg("Clinic not found.");
+   c.name=cname;c.location=clocation;c.start=cstart;c.end=cend;c.buffer=cbuf;
+  }
+  $("overlay").classList.remove("show");render();msg("Sample clinic schedule saved. Not synced to any hospital.");return;
+ }
+ if(action==="visit-add"){
+  var vid=$("modal-visit-clinic")?.value,vpatient=$("modal-visit-patient")?.value.trim(),vtime=$("modal-visit-time")?.value,vreason=$("modal-visit-reason")?.value.trim();
+  var clinic=doctorClinics.find(function(c){return c.id===vid&&c.active});
+  if(!clinic||!vpatient||!vreason||!Number.isFinite(clockMinutes(vtime)))return msg("Complete the appointment details.");
+  var t=clockMinutes(vtime);
+  if(t<clockMinutes(clinic.start)||t+20>clockMinutes(clinic.end))return msg("Choose a 20-minute slot within this clinic's working hours.");
+  if(doctorVisits.some(function(v){return Math.abs(clockMinutes(v.time)-t)<20}))return msg("Appointment conflict: choose a different time.");
+  doctorVisits.push({id:Date.now(),patient:vpatient,reason:vreason,time:vtime,clinicId:clinic.id});
+  $("overlay").classList.remove("show");render();msg("Sample appointment scheduled. Review clinic transfers before travelling.");return;
+ }
+
  var v=$("modal-value")?.value?.trim()||"";
  if(action==="note"){if(v.length<5)return msg("Enter a meaningful clinician-authored note.");pendingNote=v;approvedNote=false;msg("Draft saved. Patient cannot see it until approved.")}
  else if(action==="report"){if(v.length<6)return msg("Enter an illustrative sample result.");reports.push({title:action.split(":")[1]||"Sample diagnostic report",body:v,approved:false,comment:""});msg("Sample report submitted for doctor review.")}
  else if(action.indexOf("report:")===0){if(v.length<6)return msg("Enter an illustrative result.");reports.push({title:action.slice(7),body:v,approved:false,comment:""});msg("Sample report sent to doctor review.")}
- else if(action.indexOf("review:")===0){var ind=Number(action.split(":")[1]);var pending=reports.filter(function(r){return !r.approved})[ind];if(pending){pending.approved=true;pending.comment=v||"Reviewed by the sample doctor";msg("Fictional report released to the patient.");}}
+ else if(action.indexOf("review:")===0){var ind=Number(action.split(":")[1]);var pending=reports.filter(function(r){return !r.approved})[ind];if(pending){pending.approved=true;pending.comment=v||"Reviewed by the sample doctor";addAlert("patient","Report reviewed by your doctor",pending.title+" · Dr. Meera Rao approved release of the fictional result.","info","records");addAlert("doctor","Report release logged",pending.title+" was reviewed and released to the sample patient.","info","orders",true);msg("Demo result released to patient after doctor review.");}}
  else if(action.indexOf("booking:")===0){bookings.push({type:action.split(":")[1],when:v||"Date to be confirmed",status:"Requested"});msg("Demo request created; no provider was contacted.")}
  $("overlay").classList.remove("show");render();return;
  }
+ 
+ if(a==="clinic-add"){drawer("clinic-add","Add clinic or hospital","Add another optional place of practice. This is a fictional schedule.",clinicFields());return}
+ if(a.indexOf("clinic-edit:")===0){var c=doctorClinics.find(function(x){return x.id===a.split(":")[1]});if(c)drawer(a,"Edit clinic schedule","Update your working hours and manual travel allowance.",clinicFields(c));return}
+ if(a.indexOf("clinic-toggle:")===0){var c=doctorClinics.find(function(x){return x.id===a.split(":")[1]});if(c){c.active=!c.active;render();msg(c.active?"Clinic enabled for new appointments.":"Clinic paused. Existing appointments are retained in the demo.");}return}
+ if(a==="visit-add"){if(!sortedClinics().length)return msg("Enable or add a clinic before scheduling.");drawer("visit-add","Add doctor appointment","A fictional calendar item, not a confirmed booking at any hospital.",visitFields());return}
+ if(a==="alerts-read"){careAlerts.filter(function(x){return x.target==="doctor"}).forEach(function(x){x.read=true});render();msg("Doctor updates marked read in this browser.");return}
+ if(a.indexOf("alert:")===0){var notification=careAlerts.find(function(x){return x.id===Number(a.split(":")[1])});if(notification){notification.read=true;navigate(notification.page||"home")}return}
+
  if(a.indexOf("nav:")===0){navigate(a.slice(4));return}
  if(a.indexOf("role:")===0){role=a.slice(5);$("role").value=role;navigate("home");return}
- if(a.indexOf("day:")===0){done=Math.min(7,Number(a.split(":")[1])+1);render();msg("Simulated visit progress changed. No real care recorded.");return}
- if(a==="nurse-next"){done=Math.min(7,done+1);render();msg("Demo visit progress updated, not actual administration.");return}
+ if(a.indexOf("day:")===0){var old=done;done=Math.min(7,Number(a.split(":")[1])+1);if(done>old)addAlert("doctor","Home nursing progress updated","Ananya Sharma · "+done+" of 7 visits marked in the demo.","info","inbox");render();msg("Simulated visit progress changed. No real care recorded.");return}
+ if(a==="nurse-next"){var old=done;done=Math.min(7,done+1);if(done>old)addAlert("doctor","Home nursing visit marked complete","Ananya Sharma · "+done+" of 7 fictional visits recorded.","info","inbox");render();msg("Demo visit progress updated, not actual administration.");return}
  if(a.indexOf("book:")===0){drawer("booking:"+a.slice(5),"Request "+a.slice(5),"Fictional providers only. This is a local UI demonstration; no appointment is made.",'<label class="label">Preferred date or time (optional)</label><input id="modal-value" class="field" type="text" placeholder="e.g. Friday morning">');return}
  if(a==="guide:"){return}
  if(a.indexOf("guide:")===0){drawer("guide","Care navigation","A clinician may consider this specialty, but symptom severity and health context can change the appropriate choice. Severe symptoms require urgent assessment.",'<div class="caution">Selected concern: '+esc(a.slice(6))+'. Not a diagnosis or validated triage result.</div>');return}
  if(a==="note-save"){var val=$("notearea").value.trim();if(!val)return msg("Enter clinical notes first.");pendingNote=val;approvedNote=false;render();msg("Unsigned note saved. Only doctor view can show it.");return}
- if(a==="note-approve"){var value=$("notearea")?.value?.trim()||pendingNote;if(!value)return msg("Add notes and review before approving.");pendingNote=value;approvedNote=true;render();msg("Fictional note approved; check the patient records.");return}
+ if(a==="note-approve"){var value=$("notearea")?.value?.trim()||pendingNote;if(!value)return msg("Add notes and review before approving.");pendingNote=value;approvedNote=true;addAlert("patient","Consultation note available","Dr. Meera Rao approved a fictional consultation note.","info","records");render();msg("Fictional note approved; check the patient records.");return}
  if(a==="med-add"){if(selection==="Amoxicillin")return msg("Potential allergy conflict. Entry blocked in demo.");if(rx.indexOf(selection)<0)rx.push(selection);render();msg("Medicine added to unsigned draft. No prescription issued.");return}
- if(a.indexOf("confirm:")===0){var idx=Number(a.slice(8));var diagnostics=bookings.filter(function(b){return b.type!=="Home nursing"});if(diagnostics[idx])diagnostics[idx].status="Confirmed";render();msg("Sample booking confirmed in demo only.");return}
+ if(a.indexOf("confirm:")===0){var idx=Number(a.slice(8));var diagnostics=bookings.filter(function(b){return b.type!=="Home nursing"});if(diagnostics[idx]){diagnostics[idx].status="Confirmed";addAlert("doctor","Diagnostic booking confirmed","Ananya Sharma · "+diagnostics[idx].type+" · Sample appointment confirmed.","info","inbox");addAlert("patient","Diagnostic appointment confirmed",diagnostics[idx].type+" · This is a demo confirmation only.","info","services");}render();msg("Sample booking confirmed in demo only.");return}
  if(a.indexOf("lab-report:")===0){drawer("report:"+a.slice(11),"Submit sample lab result","Fictional text only. Doctor review is mandatory before patient release.",textField("Enter a fictional diagnostic summary. Never use real patient data.","modal-value"));return}
  if(a.indexOf("review:")===0){drawer(a,"Doctor review of report","This is an illustrative approval, not a clinically valid report release.",textField("Doctor-approved fictional explanation","modal-value"));return}
 });
