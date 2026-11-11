@@ -315,7 +315,7 @@ function taskCards(list){
  if(!list.length)return '<div class="no-task">Nothing requiring action in this category.</div>';
  return list.map(function(t){
   var report=findReportForTask(t),open=report&&!report.approved;
-  var actions=button(t.status==="new"?"Acknowledge":"Acknowledged","task-ack:"+t.id);
+  var actions=t.acked?badge("✓ Acknowledged"):button("Acknowledge","task-ack:"+t.id);
   actions+=button("Assign","task-assign:"+t.id);
   if(t.type==="report"&&open)actions+=button("Review report","task-review:"+t.id,true);
   else if(t.type==="report"&&report&&report.approved&&t.priority!=="critical")actions+=badge("Doctor reviewed");
@@ -425,11 +425,28 @@ document.addEventListener("click",function(e){
   $("overlay").classList.remove("show");render();msg("Sample appointment scheduled. Review clinic transfers before travelling.");return;
  }
 
+ 
+ if(action.indexOf("task-assign:")===0){
+  var task=taskForId(action.slice(12)),owner=$("modal-task-owner")?.value;
+  if(!task||!["Dr. Meera Rao","Care coordinator","Clinic nurse"].includes(owner))return msg("Select a valid sample assignee.");
+  task.owner=owner;task.status="assigned";
+  $("overlay").classList.remove("show");render();msg("Demo task assigned to "+owner+". No external team member was notified.");return;
+ }
+ if(action.indexOf("task-resolve:")===0){
+  var task=taskForId(action.slice(13)),note=$("modal-value")?.value.trim()||"";
+  if(!task||task.status==="resolved")return msg("Task cannot be resolved.");
+  if(task.type==="report"&&findReportForTask(task)&&!findReportForTask(task).approved)return msg("First review and approve the clinical report; this task cannot bypass doctor review.");
+  if(task.priority==="critical"&&!task.acked)return msg("Acknowledge the sample critical alert before documenting escalation.");
+  if(note.length<10)return msg("Enter a documented follow-up / handoff note (at least 10 characters).");
+  task.status="resolved";task.resolution=note;task.resolvedAt=new Date().toISOString();
+  $("overlay").classList.remove("show");render();msg("Sample task closed with documentation. This is NOT verified clinical escalation.");return;
+ }
+
  var v=$("modal-value")?.value?.trim()||"";
  if(action==="note"){if(v.length<5)return msg("Enter a meaningful clinician-authored note.");pendingNote=v;approvedNote=false;msg("Draft saved. Patient cannot see it until approved.")}
  else if(action==="report"){if(v.length<6)return msg("Enter an illustrative sample result.");reports.push({title:action.split(":")[1]||"Sample diagnostic report",body:v,approved:false,comment:""});msg("Sample report submitted for doctor review.")}
- else if(action.indexOf("report:")===0){if(v.length<6)return msg("Enter an illustrative result.");var reportTitle=action.slice(7);reports.push({title:reportTitle,body:v,approved:false,comment:""});addAlert("doctor","Diagnostic report ready for review","Ananya Sharma · "+reportTitle+" · A sample lab has submitted a fictional report.","action","orders");msg("Demo report sent to doctor review. An update appears in the doctor workspace.")}
- else if(action.indexOf("review:")===0){var ind=Number(action.split(":")[1]);var pending=reports.filter(function(r){return !r.approved})[ind];if(pending){pending.approved=true;pending.comment=v||"Reviewed by the sample doctor";addAlert("patient","Report reviewed by your doctor",pending.title+" · Dr. Meera Rao approved release of the fictional result.","info","records");addAlert("doctor","Report release logged",pending.title+" was reviewed and released to the sample patient.","info","orders",true);msg("Demo result released to patient after doctor review.");}}
+ else if(action.indexOf("report:")===0){if(v.length<6)return msg("Enter an illustrative result.");var reportTitle=action.slice(7),rep={id:"rpt-"+(taskSerial++),title:reportTitle,body:v,approved:false,comment:"",flag:"unassessed"};reports.push(rep);createReportTask(rep,false);addAlert("doctor","Diagnostic report awaiting clinician review","Ananya Sharma · "+reportTitle+" · No AI-based normality classification is connected.","action","inbox");msg("Demo report sent to doctor review. An update appears in the doctor workspace.")}
+ else if(action.indexOf("review:")===0){var ind=Number(action.split(":")[1]);var pending=reports.filter(function(r){return !r.approved})[ind];if(pending){pending.approved=true;pending.comment=v||"Reviewed by the sample doctor";var reportTask=doctorTasks.find(function(t){return t.reportId===pending.id});if(reportTask&&reportTask.priority!=="critical"){reportTask.status="resolved";reportTask.acked=true;reportTask.resolution="Doctor-approved report release (demo).";}addAlert("patient","Report reviewed by your doctor",pending.title+" · Dr. Meera Rao approved release of the fictional result.","info","records");addAlert("doctor","Report release logged",pending.title+" was reviewed and released to the sample patient.","info","orders",true);msg("Demo result released to patient after doctor review.");}}
  else if(action.indexOf("booking:")===0){bookings.push({type:action.split(":")[1],when:v||"Date to be confirmed",status:"Requested"});msg("Demo request created; no provider was contacted.")}
  $("overlay").classList.remove("show");render();return;
  }
@@ -440,6 +457,46 @@ document.addEventListener("click",function(e){
  if(a==="visit-add"){if(!sortedClinics().length)return msg("Enable or add a clinic before scheduling.");drawer("visit-add","Add doctor appointment","A fictional calendar item, not a confirmed booking at any hospital.",visitFields());return}
  if(a==="alerts-read"){careAlerts.filter(function(x){return x.target==="doctor"}).forEach(function(x){x.read=true});render();msg("Doctor updates marked read in this browser.");return}
  if(a.indexOf("alert:")===0){var notification=careAlerts.find(function(x){return x.id===Number(a.split(":")[1])});if(notification){notification.read=true;navigate(notification.page||"home")}return}
+
+ 
+ if(a.indexOf("task-filter:")===0){taskFilter=a.slice(12);render();return}
+ if(a.indexOf("task-ack:")===0){
+  var task=taskForId(a.slice(9));
+  if(!task)return msg("Task not found.");
+  task.acked=true;if(task.status==="new")task.status="acknowledged";
+  render();msg("Demo task acknowledged. Clinical follow-up may still be required.");return;
+ }
+ if(a.indexOf("task-assign:")===0){
+  var task=taskForId(a.slice(12));
+  if(!task)return msg("Task not found.");
+  drawer(a,"Assign care task","Choose who owns the sample follow-up. This does not message any real clinician.",
+  '<label class="label">Assigned professional</label><select id="modal-task-owner" class="field">'+
+  ["Dr. Meera Rao","Care coordinator","Clinic nurse"].map(function(x){return '<option value="'+esc(x)+'" '+(task.owner===x?"selected":"")+'>'+esc(x)+'</option>'}).join("")+
+  '</select><p class="notes">In production, assigning clinical responsibility requires permission checks and confirmation of acceptance.</p>');return;
+ }
+ if(a.indexOf("task-resolve:")===0){
+  var task=taskForId(a.slice(13));
+  if(!task)return msg("Task not found.");
+  if(task.type==="report"&&findReportForTask(task)&&!findReportForTask(task).approved)return msg("Doctor must review the result before it can be closed.");
+  drawer(a,task.priority==="critical"?"Document sample critical-result escalation":"Document task resolution",
+  task.priority==="critical"?"Simulated only. A real critical result needs laboratory-verified details, prompt direct clinician contact and a time-stamped communication record. Clicking save is NOT an actual escalation.":"Describe the action taken. This demonstration does not contact patients or providers.",
+  '<label class="label">Action / handoff details</label>'+textField("Enter a fictional note explaining follow-up or escalation.","modal-value"));return;
+ }
+ if(a.indexOf("task-review:")===0){
+  var task=taskForId(a.slice(12)),report=task?findReportForTask(task):null;
+  if(!report)return msg("Associated report missing.");
+  if(report.approved)return msg("Already reviewed; close any remaining follow-up separately.");
+  var index=reports.filter(function(r){return !r.approved}).findIndex(function(r){return r.id===report.id});
+  if(index<0)return msg("Report is not awaiting review.");
+  drawer("review:"+index,"Review sample report","Fictional report: "+report.title+" — "+report.body+
+  ". The system has NOT clinically classified or cleared this result; only authorised clinicians can release it.",
+  '<label class="label">Doctor-reviewed explanation</label>'+textField("Enter a fictional clinician-reviewed interpretation. Do not use real patient data.","modal-value"));return;
+ }
+ if(a==="task-demo-critical"){
+  var rep={id:"rpt-critical-"+(taskSerial++),title:"SIMULATION: Lab critical-value notification",body:"Illustrative critical flag; no numerical values, clinical inference or verified lab contact.",approved:false,comment:"",flag:"lab-flag-demo"};
+  reports.push(rep);createReportTask(rep,true);addAlert("doctor","Demo critical lab flag — action needed","No real critical result exists. A lab-verified critical-value notification would require immediate direct communication.","warning","inbox");
+  taskFilter="critical";render();msg("Fictional critical-value workflow created. This is not a real medical alarm.");return;
+ }
 
  if(a.indexOf("nav:")===0){navigate(a.slice(4));return}
  if(a.indexOf("role:")===0){role=a.slice(5);$("role").value=role;navigate("home");return}
