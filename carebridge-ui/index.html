@@ -103,6 +103,45 @@ body{background:#fbf8f3}
   .mobile button{flex:0 0 57px}
 }
 
+
+/* Doctor command centre: high-information density without visual overload */
+.command-grid{display:grid;grid-template-columns:1.15fr 1fr .9fr;gap:12px;margin:15px 0 19px}
+.command-card{background:#fffefa;border:1px solid #e9e6df;border-radius:16px;padding:17px;min-width:0}
+.command-card .kicker{color:#718e80;font-size:10px;text-transform:uppercase;font-weight:850;letter-spacing:1px}
+.command-card h3{margin:10px 0 4px;color:#174a3d;line-height:1.2;font-size:18px;letter-spacing:-.5px}
+.command-card p{font-size:11px;line-height:1.5;color:#799087;margin:0 0 10px}
+.command-card .big{font:400 25px/1.2 Georgia,serif;color:#0c4f42;margin:9px 0}
+.command-card .btn{margin-top:9px}
+.command-card.current{border-color:#b9dacb;background:#edf6f0}
+.command-status{font-size:10px;padding:5px 7px;border-radius:6px;background:#dbf0e4;color:#1a7559;display:inline-block;font-weight:850}
+.task-switch{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;margin:8px 0 15px}
+.task-switch button{border:1px solid #dfebe4;border-radius:9px;padding:9px 11px;background:#fff;color:#54786a;font-size:11px;font-weight:750;white-space:nowrap}
+.task-switch button.active{background:#074f42;color:white;border-color:#074f42}
+.task-row{padding:16px 0;border-top:1px solid #eeeae3;display:flex;align-items:flex-start;gap:12px}
+.task-row:first-child{border-top:0}
+.task-symbol{width:39px;height:39px;display:grid;place-items:center;border-radius:11px;flex-shrink:0;font-size:20px;background:#f0f7f1}
+.task-row.critical .task-symbol{background:#fff0e9}
+.task-row.review .task-symbol{background:#fdf2e3}
+.task-body{flex:1;min-width:0}
+.task-body strong{font-size:12px;color:#173e34;display:block;margin-bottom:4px;line-height:1.4}
+.task-body p{font-size:11px;color:#748a80;line-height:1.5;margin:0 0 8px}
+.task-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
+.tier{font-size:10px;font-weight:750;border-radius:7px;background:#edf4ee;padding:5px 7px;color:#487965;display:inline-block}
+.tier.critical{background:#ffe3dc;color:#a34435}
+.tier.review{background:#fff2dd;color:#94631d}
+.task-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.task-actions .btn{padding:8px 10px;font-size:10px}
+.task-counts{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:12px 0}
+.task-counts>div{padding:13px;background:#fff;border:1px solid #e9e6dd;border-radius:11px}
+.task-counts b{display:block;font-size:21px;color:#124f41;margin:5px 0}
+.task-counts small{font-size:10px;color:#6b8b7b}
+.care-balance{padding:13px 15px;background:#f1f7ee;border:1px solid #d8e9d5;border-radius:12px;color:#476f57;font-size:11px;line-height:1.6}
+.care-balance strong{display:block;color:#1a573d;margin-bottom:4px}
+.no-task{text-align:center;border:1px dashed #deebdf;border-radius:12px;padding:22px;color:#7c9687;font-size:11px}
+.kv-bullet{display:inline-block;width:6px;height:6px;background:#e98b68;border-radius:50%;margin-left:4px;vertical-align:middle}
+@media(max-width:960px){.command-grid{grid-template-columns:1fr 1fr}.command-card:last-child{grid-column:span 2}}
+@media(max-width:640px){.command-grid{grid-template-columns:1fr;gap:9px}.command-card:last-child{grid-column:auto}.command-card{padding:15px}.task-counts{gap:6px}.task-counts>div{padding:10px 7px}.task-counts b{font-size:18px}.task-counts small{font-size:9px}.task-row{gap:9px}.task-symbol{height:32px;width:32px;font-size:17px}}
+
 </style>
 </head>
 <body>
@@ -255,7 +294,95 @@ function adminHome(){return head("CARE OPERATIONS","Operations centre","One view
 function adminRequests(){return head("SERVICE OPERATIONS","Requests & confirmations","A shared queue for fictional partner fulfilment.")+panel("All patient requests",bookings.map(function(b){return it("📋",b.type,b.when,badge(b.status,b.status==="Requested"?"amber":""))}).join("")||'<p class="muted">No bookings submitted.</p>')}
 function adminNurses(){return head("HOME CARE OPERATIONS","Nursing coordination","Track visit progress and scheduling against a sample approved order.")+panel("Ananya Sharma · Home nursing",it("💙","Observation visits",done+" of 7 simulated visits completed",badge("Active"))+'<div class="progress"><div style="width:'+(100*done/7)+'%"></div></div>'+button("Open nurse workspace","role:nurse",true))+panel("Safety gates",it("📋","Doctor approval","Required before scheduling treatment")+it("🪪","Credential verification","Not available in this preview",badge("Not connected","amber")))}
 function adminProviders(){return head("PARTNER DIRECTORY","Provider network","Illustrative partners only; no real service validation.")+panel("Providers",it("🧪","Asha Diagnostics","Example laboratory · Bengaluru",badge("Unverified","amber"))+it("🏥","City Imaging Studio","Example imaging centre · Bengaluru",badge("Unverified","amber"))+it("💉","Care at Home Network","Example nursing directory · Bengaluru",badge("Unverified","amber")))}
-var views={patient:{home:patientHome,care:patientCare,services:patientServices,records:patientRecords,guide:patientGuide},doctor:{home:doctorHome,patients:doctorPatients,clinics:doctorClinicsPage,inbox:doctorInboxPage,scribe:doctorScribe,meds:doctorMeds,orders:doctorOrders},nurse:{home:nurseHome,visits:nurseVisits,schedule:nurseSchedule},lab:{home:labHome,requests:labRequests,results:labResults},admin:{home:adminHome,requests:adminRequests,nurses:adminNurses,providers:adminProviders}};
+
+// Demonstration-only care operations. No AI classifier, live critical alerting or automatic clinical clearance.
+var doctorTasks=[
+ {id:"fu1",priority:"followup",title:"Follow-up needs confirmation",patient:"Ananya Sharma",detail:"Confirm the planned follow-up and patient instructions.",owner:"Dr. Meera Rao",status:"new",type:"followup"},
+ {id:"rn1",priority:"routine",title:"Nursing visit progress update",patient:"Ananya Sharma",detail:"Two example home visits have been marked in the sample plan.",owner:"Care coordinator",status:"new",type:"routine"}
+];
+var taskSerial=1,taskFilter="all";
+function createReportTask(rep,labCritical){
+ var t={id:"tr"+(taskSerial++),priority:labCritical?"critical":"review",title:labCritical?"Lab-reported critical-value flag — verify now":"Diagnostic report awaiting review",patient:"Ananya Sharma",detail:rep.title+" · "+(labCritical?"Lab-marked critical in this demonstration; independent verification and immediate clinician notification required.":"No validated clinical classification. Requires clinician review."),owner:"Dr. Meera Rao",status:"new",type:"report",reportId:rep.id,criticalAcknowledgment:false};
+ doctorTasks.unshift(t);
+ return t;
+}
+function pendingTasks(){return doctorTasks.filter(function(t){return t.status!=="resolved"})}
+function tasksOf(p){return pendingTasks().filter(function(t){return t.priority===p})}
+function taskForId(id){return doctorTasks.find(function(t){return t.id===id})}
+function findReportForTask(t){return t.reportId?reports.find(function(r){return r.id===t.reportId}):null}
+function tierName(p){return ({critical:"Urgent communication",review:"Report review",followup:"Follow-up",routine:"Routine update"})[p]||"Update"}
+function taskCards(list){
+ if(!list.length)return '<div class="no-task">Nothing requiring action in this category.</div>';
+ return list.map(function(t){
+  var report=findReportForTask(t),open=report&&!report.approved;
+  var actions=button(t.status==="new"?"Acknowledge":"Acknowledged","task-ack:"+t.id);
+  actions+=button("Assign","task-assign:"+t.id);
+  if(t.type==="report"&&open)actions+=button("Review report","task-review:"+t.id,true);
+  else if(t.type==="report"&&report&&report.approved&&t.priority!=="critical")actions+=badge("Doctor reviewed");
+  else actions+=button(t.priority==="critical"?"Document escalation":"Resolve","task-resolve:"+t.id,t.priority==="critical");
+  return '<div class="task-row '+t.priority+'"><span class="task-symbol">'+({critical:"🚨",review:"🧪",followup:"📅",routine:"🔔"})[t.priority]+'</span><div class="task-body"><strong>'+esc(t.title)+'</strong><p>'+esc(t.patient)+' · '+esc(t.detail)+'</p><div class="task-meta"><span class="tier '+t.priority+'">'+tierName(t.priority)+'</span><span class="tier">'+esc(t.status)+'</span><span class="tier">Owner: '+esc(t.owner)+'</span></div><div class="task-actions">'+actions+'</div></div></div>';
+ }).join("");
+}
+function taskCentre(limit){
+ var all=pendingTasks(),rank={critical:0,review:1,followup:2,routine:3};
+ var matching=taskFilter==="all"?all:all.filter(function(t){return t.priority===taskFilter});
+ matching=matching.slice().sort(function(a,b){return rank[a.priority]-rank[b.priority]});
+ if(limit)matching=matching.slice(0,limit);
+ var tabs=[["all","All "+all.length],["critical","Urgent "+tasksOf("critical").length],["review","Reports "+tasksOf("review").length],["followup","Follow-ups "+tasksOf("followup").length],["routine","Routine "+tasksOf("routine").length]];
+ return '<div class="task-switch">'+tabs.map(function(x){return '<button class="'+(taskFilter===x[0]?"active":"")+'" data-a="task-filter:'+x[0]+'">'+x[1]+'</button>'}).join("")+'</div>'+taskCards(matching);
+}
+function timeInIST(){
+ try{var parts=new Intl.DateTimeFormat("en-GB",{timeZone:"Asia/Kolkata",hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).formatToParts(new Date());
+ var hour=Number(parts.find(function(p){return p.type==="hour"}).value),min=Number(parts.find(function(p){return p.type==="minute"}).value);
+ return hour*60+min;}catch(e){return new Date().getHours()*60+new Date().getMinutes();}
+}
+function shiftSnapshot(){
+ var m=timeInIST(),clinics=sortedClinics(),current=clinics.find(function(c){return clockMinutes(c.start)<=m&&clockMinutes(c.end)>m});
+ var next=clinics.find(function(c){return clockMinutes(c.start)>m});
+ var visits=doctorVisits.slice().sort(function(a,b){return clockMinutes(a.time)-clockMinutes(b.time)});
+ var nextVisit=visits.find(function(v){return clockMinutes(v.time)>=m})||visits[0];
+ var isNextDay=nextVisit&&clockMinutes(nextVisit.time)<m;
+ var c=nextVisit?doctorClinics.find(function(x){return x.id===nextVisit.clinicId}):null;
+ return {current:current,next:next,visit:nextVisit,visitClinic:c,nextDay:isNextDay};
+}
+function doctorCommandHome(){
+ var s=shiftSnapshot(),review=reports.filter(function(r){return !r.approved}).length;
+ var cur=s.current?'<span class="command-status">Session in progress</span><h3>'+esc(s.current.name)+'</h3><p>'+esc(s.current.location)+'</p><strong>'+esc(s.current.start)+'–'+esc(s.current.end)+'</strong>':'<span class="command-status">Between sessions / off duty</span><h3>No active clinic now</h3><p>'+(s.next?"Next planned: "+esc(s.next.name)+" at "+esc(s.next.start):"No further sessions in the example day")+'</p>';
+ var next=s.visit?'<div class="big">'+esc(s.visit.time)+'</div><h3>'+esc(s.visit.patient)+'</h3><p>'+esc(s.visit.reason)+' · '+esc(s.visitClinic?s.visitClinic.name:"Clinic not assigned")+' '+(s.nextDay?"· Next sample day":"")+'</p>':'<h3>No sample appointments</h3>';
+ return '<div class="doctor-hero"><div><div class="eyebrow">DOCTOR COMMAND CENTRE · DEMO</div><h1>Good evening, Doctor</h1><p>One calm view of clinic hours, consultations, outstanding reports and follow-up actions.</p></div>'+button("+ Appointment","visit-add",true)+'</div>'+
+ '<div class="command-grid"><div class="command-card current"><div class="kicker">Current clinic · India time</div>'+cur+button("Manage locations","nav:clinics")+'</div>'+
+ '<div class="command-card"><div class="kicker">Next listed appointment</div>'+next+button("See queue","nav:clinics")+'</div>'+
+ '<div class="command-card"><div class="kicker">Between-clinic transfer</div><div class="big">'+(sortedClinics().length>1?fmtGap(Math.max(0,clockMinutes(sortedClinics()[1].start)-clockMinutes(sortedClinics()[0].end))):"—")+'</div><p>Sample timetable only. Check route and traffic before travelling.</p>'+button("Travel buffers","nav:clinics")+'</div></div>'+
+ '<div class="task-counts"><div><small>Urgent</small><b>'+tasksOf("critical").length+'</b></div><div><small>Reports to review</small><b>'+review+'</b></div><div><small>Follow-ups</small><b>'+tasksOf("followup").length+'</b></div><div><small>Open tasks</small><b>'+pendingTasks().length+'</b></div></div>'+
+ '<div class="two"><div>'+
+ panel("Action required · Doctor inbox",taskCentre(5)+'<div class="btnrow">'+button("Open full task centre","nav:inbox",true)+button("Simulate lab critical flag","task-demo-critical")+'</div>')+
+ panel("Patient queue · Combined clinics",doctorVisits.slice().sort(function(a,b){return clockMinutes(a.time)-clockMinutes(b.time)}).map(function(v){var c=doctorClinics.find(function(x){return x.id===v.clinicId});return it("👤",v.patient,v.time+" · "+esc(c?c.name:"Unassigned"),badge(v.reason))}).join(""))+
+ '</div><div>'+
+ panel("Reports and clinical review",'<div class="care-balance"><strong>Review by exception, with doctor oversight</strong>Results can be organised by verified laboratory flags and patient context. This demo does not classify normality, approve reports automatically or send emergency alerts.</div>'+it("🧪","Unreviewed reports",review+" require qualified clinical review",button("Review","nav:orders",true)))+
+ panel("Patient updates · For awareness",infoFeed("doctor",3)+ '<div class="btnrow">'+button("All updates","nav:inbox")+'</div>')+
+ panel("Clinic transitions",transitionHtml())+
+ '</div></div>';
+}
+function doctorActionInbox(){
+ return head("CLINICAL TASK CENTRE","Actions & patient updates","Acknowledge, assign and close follow-ups. Report approval remains a separate clinical action.")+
+ '<div class="task-counts"><div><small>Critical lab flags</small><b>'+tasksOf("critical").length+'</b></div><div><small>Report review</small><b>'+tasksOf("review").length+'</b></div><div><small>Follow-ups</small><b>'+tasksOf("followup").length+'</b></div><div><small>Resolved</small><b>'+doctorTasks.filter(function(t){return t.status==="resolved"}).length+'</b></div></div>'+
+ panel("Clinical actions",taskCentre())+
+ '<div class="btnrow" style="margin-bottom:12px">'+button("Simulate lab critical flag","task-demo-critical")+button("Review all reports","nav:orders",true)+'</div>'+
+ panel("Informational notifications",infoFeed("doctor")+'<div class="btnrow">'+button("Mark informational updates read","alerts-read")+'</div>')+
+ '<div class="caution danger">Critical values cannot safely be handled by a dashboard alone. Real labs require verified contact, immediate escalation according to their protocol, and auditable receipt / read-back. All controls here are simulation only.</div>';
+}
+function patientHomeSimple(){
+ return '<div class="patient-welcome-content"><section class="welcome-screen"><h1 class="welcome-heading">Good evening, Ananya</h1><div class="smile">☺ <span>›</span></div><p class="welcome-sub">What would you like help with today?</p><div class="welcome-grid">'+
+ [["▦","Schedule","An appointment","book:Doctor consultation"],["☏","Care guide","Find the right doctor","nav:guide"],["✚","My records","Reports & prescriptions","nav:records"],["♡","My tasks","Care plan & reminders","nav:care"]].map(function(x){return '<button class="welcome-tile" data-a="'+x[3]+'"><span class="glyph">'+x[0]+'</span><span><strong>'+x[1]+'</strong><small>'+x[2]+'</small></span></button>'}).join("")+
+ '</div></section><section class="warm-section"><div class="warm-header"><h2>Appointments</h2><button data-a="nav:services">See all ›</button></div><div class="upcoming-card"><div class="upcoming-icon">♧</div><div class="upcoming-body"><strong>Follow-up consultation</strong><small>'+esc(appointment)+'</small><small>Dr. Meera Rao</small></div><div class="upcoming-right">'+badge("Upcoming")+'<b>›</b></div></div></section></div>'+
+ '<div class="two" style="margin-top:19px"><div>'+panel("Your next steps",it("🧪","HbA1c blood test","Doctor-approved sample order",button("Request","book:Lab test",true))+it("🏥","Ultrasound abdomen","Doctor-approved scan request",button("Request","book:Imaging scan"))+it("💉","Home nursing",done+" of 7 sample visits complete",badge("In progress")))+
+ '</div><div>'+panel("Updates",infoFeed("patient",3))+'</div></div>';
+}
+// Seed one fictional unassessed report to show the review workflow, never a medical classification.
+var seedRep={id:"rpt-seed-1",title:"Example blood-test report",body:"Demo report received with no numerical values or verified clinical interpretation.",approved:false,comment:"",flag:"unassessed"};
+reports.push(seedRep);createReportTask(seedRep,false);
+
+var views={patient:{home:patientHomeSimple,care:patientCare,services:patientServices,records:patientRecords,guide:patientGuide},doctor:{home:doctorCommandHome,patients:doctorPatients,clinics:doctorClinicsPage,inbox:doctorActionInbox,scribe:doctorScribe,meds:doctorMeds,orders:doctorOrders},nurse:{home:nurseHome,visits:nurseVisits,schedule:nurseSchedule},lab:{home:labHome,requests:labRequests,results:labResults},admin:{home:adminHome,requests:adminRequests,nurses:adminNurses,providers:adminProviders}};
 function render(){
  var ms=menus[role];if(!views[role][page])page="home";
  $("sidenav").innerHTML=ms.map(function(n){return '<button class="nav '+(n[0]===page?"active":"")+'" data-nav="'+n[0]+'"><span class="ni">'+n[1]+'</span>'+n[2]+(role==="doctor"&&n[0]==="inbox"&&unreadFor("doctor")?" · "+unreadFor("doctor"):"")+'</button>'}).join("");
