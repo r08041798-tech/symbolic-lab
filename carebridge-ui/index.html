@@ -14,6 +14,95 @@
 .search{width:100%;padding:13px;border-radius:11px;border:1px solid #dbe7ed;background:#fff;color:#234a5b;margin-bottom:12px}.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.card{background:#fff;border:1px solid #e2ebef;border-radius:14px;padding:17px}.card h3{font-size:14px;margin:0 0 8px}.card p{font-size:11px;line-height:1.55;color:#8397a5;margin:3px 0}.card .btn{margin-top:12px}.progress{height:8px;background:#e8eef1;border-radius:99px;overflow:hidden;margin:13px 0}.progress>div{height:100%;background:#0b9f91;border-radius:99px}.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px}.day{border-radius:9px;text-align:center;border:1px solid #dce9eb;background:#f6f9fa;padding:11px 0;font-size:12px;color:#78909c;font-weight:800}.day.done{background:#dff6eb;border-color:#bde7d5;color:#098366}.day.next{border:2px solid #0a968c;color:#078a80}.notes{font-size:10px;color:#90a0ab;line-height:1.55;margin-top:12px}.caution{background:#fff8e8;border:1px solid #f1dfb8;border-radius:10px;padding:12px;color:#986c25;font-size:11px;line-height:1.6;margin:10px 0}.danger{background:#fff0f0;border-color:#f2c1c1;color:#a64048}.seg{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.seg button{border:1px solid #dce8ed;background:#fff;border-radius:9px;padding:9px 11px;font-size:11px;color:#587381;font-weight:750}.seg button.active{color:#077b74;background:#e7f7f2;border-color:#a4dcd0}.meds{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.14fr);gap:15px}.medrow{width:100%;display:flex;align-items:center;text-align:left;gap:9px;padding:11px 7px;border:1px solid transparent;border-bottom-color:#eff3f6;background:#fff;border-radius:9px}.medrow.active{background:#effaf7;border-color:#a4d9d1}.medrow .itxt small{font-size:10px}.detail h2{font-size:20px;margin:2px 0 12px;letter-spacing:-.5px}.label{color:#8799a5;font-weight:850;font-size:10px;letter-spacing:.7px;text-transform:uppercase;margin:13px 0 5px}.value{font-size:12px;line-height:1.55;color:#365565}.field{display:block;width:100%;padding:12px;border-radius:9px;border:1px solid #dce7ed;background:#fff;color:#2c4d5a;margin:7px 0 13px}.modal-back{position:fixed;inset:0;background:#173e50a8;display:none;align-items:center;justify-content:center;z-index:100;padding:20px}.modal-back.show{display:flex}.modal{background:#fff;padding:23px;border-radius:18px;max-width:450px;width:100%;box-shadow:0 30px 80px #10323b35}.modal h2{margin:0 0 9px;font-size:20px}.modal p{font-size:12px;color:#6e8492;line-height:1.5}.modal textarea{min-height:120px;resize:vertical}.toast{position:fixed;z-index:150;bottom:20px;left:50%;transform:translateX(-50%);padding:13px 18px;background:#173c49;color:#fff;border-radius:12px;display:none;box-shadow:0 12px 28px #163d4a35;font-size:12px;max-width:90vw}.mobile{display:none}
 @media(max-width:870px){.side{width:195px}.content{padding:22px 18px 90px}.two{grid-template-columns:1fr}.top{padding:15px 18px}}
 @media(max-width:640px){.side{display:none}.top{padding:13px 15px}.topsub{font-size:9px}.role{max-width:145px;padding:9px;font-size:11px}.content{padding:18px 13px 98px}.hero{padding:20px;display:block}.hero strong{font-size:19px}.hero button{margin-top:10px}.stats{gap:8px}.stat{padding:12px}.stat b{font-size:23px}.stat small{font-size:10px}.panel,.card{padding:14px}.cards,.meds{grid-template-columns:1fr}.mobile{display:flex;position:fixed;bottom:0;left:0;right:0;justify-content:space-around;background:#fff;border-top:1px solid #e0e9ee;padding:9px 4px 14px;z-index:30;box-shadow:0 -7px 20px #0a2d3b08}.mobile button{display:grid;place-items:center;gap:3px;min-width:48px;color:#91a1ac;background:none;border:0;font-size:9px;font-weight:750}.mobile button.active{color:#09857c}.mobile span{font-size:20px}.days{gap:4px}.day{padding:9px 0}}
+
+/* CareBridge warm editorial visual system inspired by the supplied reference */
+:root{background:#fbf8f3;color:#123e35}
+body{background:#fbf8f3}
+.side{background:#fffdf9;border-color:#efe8dd}
+.main{background:#fbf8f3}
+.top{background:#fffdf9;border-color:#efe9df}
+.topname,.head h1,.ph h2{color:#143f35}
+.brand{color:#103f36}.brand b{color:#0a8b7b}.mark{background:#004c40}
+.nav.active{background:#e6f3ed;color:#006d59}
+.panel,.stat,.card{border-color:#eae5dd;box-shadow:0 2px 10px rgba(28,55,44,.025)}
+.btn.primary{background:#004c40;border-color:#004c40}
+.chip{background:#e3f5e8;color:#28704e}
+.welcome-screen{background:#004c3f;color:#fffaf4;border-radius:24px 24px 0 0;padding:28px 34px 32px;overflow:hidden}
+.welcome-heading{font-family:Georgia,"Times New Roman",serif;font-size:clamp(29px,4.3vw,47px);font-weight:400;letter-spacing:-1.6px;line-height:1.14;margin:2px 0 13px;color:#fffaf4}
+.welcome-sub{color:#d2e7db;font-size:12px;margin:0 0 20px;line-height:1.55}
+.smile{display:inline-flex;align-items:center;gap:8px;background:#fffaf4;color:#034e43;border-radius:30px;font-size:20px;padding:6px 12px;margin-bottom:25px}
+.smile span{font-size:16px}
+.welcome-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;max-width:740px}
+.welcome-tile{border:0;background:#fffaf4;color:#163f37;padding:22px;border-radius:22px;text-align:left;min-height:144px;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:10px;transition:transform .15s,background .15s;box-shadow:0 6px 18px #012f2a22}
+.welcome-tile:hover{transform:translateY(-2px);background:#fef3e7}
+.welcome-tile .glyph{font-size:28px;line-height:1;color:#df6d5e;display:block;min-height:34px}
+.welcome-tile:nth-child(2) .glyph{color:#415fc4}
+.welcome-tile:nth-child(3) .glyph{color:#8b3556}
+.welcome-tile:nth-child(4) .glyph{color:#126654}
+.welcome-tile strong{font-size:17px;letter-spacing:-.5px;display:block;font-weight:790}
+.welcome-tile small{font-size:11px;color:#687f76;display:block;margin-top:3px}
+.warm-section{background:#faf4eb;border-radius:0 0 24px 24px;padding:25px 34px;margin-bottom:18px}
+.warm-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px;gap:10px}
+.warm-header h2{font:400 29px/1.2 Georgia,"Times New Roman",serif;letter-spacing:-.5px;margin:0;color:#183c31}
+.warm-header button{background:none;border:0;color:#d56d64;font-size:12px;font-weight:800}
+.upcoming-card{display:flex;align-items:center;gap:14px;background:white;border-radius:17px;padding:16px;box-shadow:0 7px 22px #3e514b13;border:1px solid #f0ece6}
+.upcoming-icon{background:#7e3152;color:white;width:65px;height:65px;display:grid;place-items:center;border-radius:17px;font-size:29px;flex-shrink:0}
+.upcoming-body{flex:1;min-width:0}.upcoming-body strong{display:block;font-size:14px;color:#184338}.upcoming-body small{display:block;font-size:11px;color:#697e77;margin-top:5px;line-height:1.4}
+.upcoming-right{display:grid;justify-items:end;gap:5px}.upcoming-right b{font-size:13px;color:#abb9b2}
+.patient-welcome-content{max-width:860px;margin:auto}.care-heading{font:400 23px/1.25 Georgia,"Times New Roman",serif;color:#153e35;margin:10px 0 16px}
+.doctor-hero{background:#034b3f;border-radius:22px;color:white;padding:25px 26px;margin-bottom:17px;display:flex;justify-content:space-between;gap:14px;align-items:center}
+.doctor-hero h1{font:400 clamp(27px,3vw,38px)/1.2 Georgia,"Times New Roman",serif;letter-spacing:-1px;margin:7px 0 7px}
+.doctor-hero p{font-size:12px;line-height:1.6;color:#d9ece3;margin:0}
+.doctor-hero .eyebrow{color:#91dfcd}.doctor-hero .btn{background:#fffaf2;border-color:#fffaf2;color:#034e40}
+.clinic-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.clinic-card{border:1px solid #e9e4db;background:#fffefa;border-radius:15px;padding:16px}
+.clinic-card .clinic-top{display:flex;justify-content:space-between;gap:8px;align-items:start}
+.clinic-card h3{margin:9px 0 7px;font-size:14px;color:#184638}.clinic-card p{color:#82958d;font-size:11px;line-height:1.5;margin:5px 0}
+.clinic-time{font:400 22px/1.2 Georgia,"Times New Roman",serif;color:#084f42;margin:12px 0}
+.clinic-meta{font-size:10px;color:#668678}
+.clinic-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
+.clinic-actions .btn{padding:8px 10px}
+.clinic-badge{display:inline-flex;background:#e2f4e6;border-radius:7px;padding:5px 7px;color:#197451;font-size:10px;font-weight:800}
+.schedule-row{display:grid;grid-template-columns:70px 1fr;gap:11px;padding:13px 0;border-bottom:1px solid #f0ece6}
+.schedule-row:last-child{border-bottom:0}
+.schedule-clock{font-size:12px;font-weight:850;color:#006b5b;margin-top:3px}
+.schedule-detail strong{font-size:12px;color:#193d32;display:block}
+.schedule-detail small{font-size:10px;color:#8da39a;display:block;margin-top:4px;line-height:1.5}
+.transition{padding:14px;background:#eaf5ee;border:1px solid #d8eadf;border-radius:11px;margin:12px 0;font-size:11px;line-height:1.6;color:#205949}
+.transition.warn{background:#fff4de;border-color:#f0ddb1;color:#925b18}
+.notification-row{display:flex;gap:12px;align-items:flex-start;border-bottom:1px solid #eeeae3;padding:13px 0}
+.notification-row:last-child{border-bottom:0}
+.notification-icon{border-radius:11px;background:#eaf4ec;height:38px;width:38px;display:grid;place-items:center;flex-shrink:0;font-size:19px}
+.notification-row.unread .notification-icon{background:#fff0d9}
+.notification-row .details{flex:1;min-width:0}
+.notification-row strong{font-size:12px;display:block;color:#214336}
+.notification-row p{font-size:11px;line-height:1.5;color:#82988e;margin:5px 0}
+.notification-row .mini{font-size:10px}
+.indicator{display:inline-block;height:7px;width:7px;border-radius:50%;background:#ef826a;margin-left:6px}
+.footer-note{font-size:10px;color:#95a69b;line-height:1.5}
+@media(max-width:870px){.clinic-grid{grid-template-columns:1fr}}
+@media(max-width:640px){
+  .welcome-screen{padding:25px 22px 25px;border-radius:23px 23px 0 0}
+  .welcome-heading{font-size:clamp(32px,8.4vw,40px)}
+  .smile{margin-bottom:20px}
+  .welcome-grid{gap:12px}
+  .welcome-tile{border-radius:19px;min-height:139px;padding:17px}
+  .welcome-tile strong{font-size:16px}
+  .welcome-tile small{font-size:10px}
+  .warm-section{padding:24px 21px;border-radius:0 0 23px 23px}
+  .warm-header h2{font-size:26px}
+  .upcoming-icon{height:55px;width:55px;font-size:25px}
+  .upcoming-card{padding:12px;gap:10px}
+  .upcoming-body strong{font-size:12px}
+  .upcoming-body small{font-size:10px}
+  .upcoming-right .chip{font-size:9px}
+  .doctor-hero{display:block;padding:23px 20px}
+  .doctor-hero .btn{margin-top:15px}
+  .clinic-grid{grid-template-columns:1fr}
+  .mobile{overflow-x:auto;justify-content:flex-start;gap:13px;scrollbar-width:none}
+  .mobile button{flex:0 0 57px}
+}
+
 </style>
 </head>
 <body>
@@ -30,8 +119,72 @@
 var role="patient",page="home",selection="Metformin",medQuery="",action="",done=2,approvedNote=false;
 var bookings=[],reports=[],pendingNote="",rx=[],labStatus=false,noticeTimer;
 var patient="Ananya Sharma", appointment="18 Nov 2026 · 10:30 AM";
+
+var doctorClinics=[
+ {id:"c1",name:"Oakline Family Clinic",location:"Indiranagar, Bengaluru",start:"09:00",end:"13:00",buffer:60,active:true},
+ {id:"c2",name:"Northside Medical Centre",location:"Whitefield, Bengaluru",start:"16:00",end:"20:00",buffer:60,active:true}
+];
+var doctorVisits=[
+ {id:1,patient:"Ananya Sharma",reason:"Follow-up consultation",time:"09:30",clinicId:"c1"},
+ {id:2,patient:"Rohit Nair",reason:"New consultation",time:"11:45",clinicId:"c1"},
+ {id:3,patient:"Priya Kapoor",reason:"Report review",time:"16:30",clinicId:"c2"}
+];
+var alertSerial=2;
+var careAlerts=[
+ {id:1,target:"doctor",title:"Clinic handoff reminder",detail:"Two sample clinic sessions are planned today. Review your travel buffer.",kind:"info",page:"clinics",read:false}
+];
+function addAlert(target,title,detail,kind,destination,read){
+ careAlerts.unshift({id:alertSerial++,target:target,title:title,detail:detail,kind:kind||"info",page:destination||"home",read:!!read});
+ if(careAlerts.length>60)careAlerts.length=60;
+}
+function unreadFor(target){return careAlerts.filter(function(a){return a.target===target&&!a.read}).length}
+function infoFeed(target,limit){
+ var all=careAlerts.filter(function(a){return a.target===target});
+ if(limit)all=all.slice(0,limit);
+ return all.length?all.map(function(a){
+  return '<div class="notification-row '+(!a.read?"unread":"")+'"><span class="notification-icon">'+(a.kind==="action"?"🧪":a.kind==="warning"?"⚠️":"🔔")+'</span><div class="details"><strong>'+esc(a.title)+(!a.read?'<i class="indicator"></i>':"")+'</strong><p>'+esc(a.detail)+'</p><span class="chip '+(a.kind==="action"?"amber":"")+'">'+(a.kind==="action"?"Needs review":"For awareness")+'</span></div>'+button(a.read?"Open":"View","alert:"+a.id)+'</div>';
+ }).join(""):'<p class="muted">No updates yet. New lab results, nursing events and appointment changes will appear here in this demo.</p>';
+}
+function clockMinutes(v){var p=String(v||"").split(":").map(Number);return p.length===2&&p.every(Number.isFinite)?p[0]*60+p[1]:NaN}
+function fmtGap(mins){return mins>=60?Math.floor(mins/60)+"h "+(mins%60?mins%60+"m":""):mins+"m"}
+function sortedClinics(){return doctorClinics.filter(function(c){return c.active}).sort(function(a,b){return clockMinutes(a.start)-clockMinutes(b.start)})}
+function transitionHtml(){
+ var c=sortedClinics();if(c.length<2)return '<p class="muted">Add another active clinic to see session transitions and transfer allowances.</p>';
+ return c.slice(1).map(function(next,i){var prev=c[i],gap=clockMinutes(next.start)-clockMinutes(prev.end),buffer=next.buffer||0,conflict=gap<buffer;
+ return '<div class="transition '+(conflict?"warn":"")+'"><strong>'+(conflict?"⚠ Schedule needs adjustment":"✓ Transfer window")+'</strong><div>'+esc(prev.name)+' ends at '+esc(prev.end)+' → '+esc(next.name)+' starts at '+esc(next.start)+'.</div><div>Gap: <b>'+fmtGap(Math.max(0,gap))+'</b> · Configured travel buffer: <b>'+buffer+' min</b>'+(gap<0?' · Sessions overlap':'')+'</div></div>';
+ }).join("")+'<p class="footer-note">Travel allowance is manually configured, not a map-based journey-time estimate. Actual traffic and travel must be checked separately.</p>';
+}
+function clinicFields(c){
+ c=c||{name:"",location:"",start:"09:00",end:"13:00",buffer:60};
+ return '<label class="label">Clinic / hospital name</label><input id="modal-clinic-name" class="field" maxlength="70" value="'+esc(c.name)+'" placeholder="Clinic name" required>'+
+ '<label class="label">Address or neighbourhood</label><input id="modal-clinic-location" class="field" maxlength="100" value="'+esc(c.location)+'" placeholder="Bengaluru area" required>'+
+ '<div class="cards"><div><label class="label">Starts at</label><input id="modal-clinic-start" class="field" type="time" value="'+esc(c.start)+'"></div><div><label class="label">Ends at</label><input id="modal-clinic-end" class="field" type="time" value="'+esc(c.end)+'"></div></div>'+
+ '<label class="label">Travel / transition allowance (minutes)</label><input id="modal-clinic-buffer" class="field" type="number" min="0" max="240" value="'+esc(c.buffer)+'">'+
+ '<p class="footer-note">Optional workspace schedule. This does not book real clinic sessions.</p>';
+}
+function visitFields(){
+ var active=sortedClinics();
+ return '<label class="label">Clinic</label><select id="modal-visit-clinic" class="field">'+active.map(function(c){return '<option value="'+esc(c.id)+'">'+esc(c.name)+' · '+esc(c.start)+'–'+esc(c.end)+'</option>'}).join("")+'</select>'+
+ '<label class="label">Patient name (fictional)</label><input id="modal-visit-patient" maxlength="70" class="field" placeholder="Sample patient" value="Ananya Sharma">'+
+ '<div class="cards"><div><label class="label">Time</label><input id="modal-visit-time" type="time" class="field" value="'+(active[0]?esc(active[0].start):"09:00")+'"></div><div><label class="label">Reason</label><input id="modal-visit-reason" class="field" maxlength="70" value="Consultation"></div></div>'+
+ '<p class="footer-note">The demo checks clinic hours and 20-minute appointment spacing, but cannot check an external hospital calendar.</p>';
+}
+function doctorClinicsPage(){
+ var clinics=doctorClinics,visits=doctorVisits.slice().sort(function(a,b){return clockMinutes(a.time)-clockMinutes(b.time)});
+ return head("OPTIONAL MULTI-LOCATION PRACTICE","My clinics & schedule","One doctor's calendar across hospitals, clinics and travel transitions.")+
+ '<div class="doctor-hero"><div><div class="eyebrow">YOUR WORKDAY · DEMO</div><h1>Every clinic. One calendar.</h1><p>Plan sessions and appointments around your travel time.</p></div>'+button("+ Add clinic","clinic-add",true)+'</div>'+
+ panel("My workplaces",'<div class="clinic-grid">'+clinics.map(function(c){return '<div class="clinic-card"><div class="clinic-top"><span class="clinic-badge">'+(c.active?"Active":"Paused")+'</span><span class="muted">'+esc(c.id)+'</span></div><h3>'+esc(c.name)+'</h3><p>📍 '+esc(c.location)+'</p><div class="clinic-time">'+esc(c.start)+' – '+esc(c.end)+'</div><div class="clinic-meta">Travel allowance before session: '+Number(c.buffer)+' min</div><div class="clinic-actions">'+button("Edit","clinic-edit:"+c.id)+button(c.active?"Pause":"Enable","clinic-toggle:"+c.id)+'</div></div>'}).join("")+'</div><p class="notes">Adding multiple locations is optional; solo-practice doctors can keep one clinic.</p>')+
+ panel("Today's combined appointments",'<div class="btnrow" style="margin:0 0 10px">'+button("+ Add appointment","visit-add",true)+'</div>'+visits.map(function(v){var c=doctorClinics.find(function(t){return t.id===v.clinicId});return '<div class="schedule-row"><div class="schedule-clock">'+esc(v.time)+'</div><div class="schedule-detail"><strong>'+esc(v.patient)+' · '+esc(v.reason)+'</strong><small>'+esc(c?c.name:"Unassigned")+' · '+esc(c?c.location:"")+'</small></div></div>'}).join(""))+
+ panel("Clinic transitions",transitionHtml());
+}
+function doctorInboxPage(){return head("DOCTOR ACTIVITY","Patient updates & reports","Action-required alerts are shown before routine updates; no real notifications are sent.")+
+ '<div class="btnrow" style="margin-bottom:15px">'+button("Mark all read","alerts-read")+' '+button("Review reports","nav:orders",true)+'</div>'+
+ panel("All updates · "+unreadFor("doctor")+" unread",infoFeed("doctor"))+
+ '<div class="caution">When a lab uploads a result, the doctor receives a review alert first. Patients see it only after the doctor approves its release. Critical-result handling requires a separate validated escalation protocol before clinical use.</div>';
+}
+
 var menus={patient:[["home","⌂","Home"],["care","♡","Care plan"],["services","⌕","Services"],["records","▤","Records"],["guide","✦","Care guide"]],
-doctor:[["home","⌂","Overview"],["patients","♙","Patients"],["scribe","✎","Clinical notes"],["meds","◈","Medicines"],["orders","▤","Care orders"]],
+doctor:[["home","⌂","Overview"],["patients","♙","Patients"],["clinics","▦","My clinics"],["inbox","◉","Updates"],["scribe","✎","Clinical notes"],["meds","◈","Medicines"],["orders","▤","Care orders"]],
 nurse:[["home","⌂","Overview"],["visits","◷","Visits"],["schedule","▦","Schedule"]],
 lab:[["home","⌂","Overview"],["requests","▦","Bookings"],["results","▣","Reports"]],
 admin:[["home","⌂","Overview"],["requests","▦","Requests"],["nurses","♡","Nursing"],["providers","♧","Providers"]]};
@@ -60,12 +213,34 @@ function navigate(p){page=p;render();window.scrollTo({top:0,behavior:"instant"})
 function drawer(a,title,description,fields){action=a;$("modtitle").textContent=title;$("moddesc").textContent=description;$("modfields").innerHTML=fields||"";$("overlay").classList.add("show")}
 function textField(placeholder,id){return '<textarea id="'+id+'" class="field" placeholder="'+esc(placeholder)+'"></textarea>'}
 function appointments(){return it("📅","Follow-up consultation",appointment+" · Dr. Meera Rao",badge("Confirmed"))}
-function patientHome(){return head("GOOD EVENING","Hello, Ananya 👋","Everything you need for your health journey, in one place.")+hero("YOUR CARE, SIMPLIFIED","Stay on top of your health, effortlessly.","Visits, medicines, tests and home care connected in one place.","View care plan →","care")+stats([["Upcoming visits","01","Follow-up scheduled"],["Pending diagnostics","02","Doctor-approved"],["Nurse visits",done+"/7","Illustrative progress"]])+'<div class="two"><div>'+panel("Your next steps",it("🧪","HbA1c blood test","Doctor-approved · Booking available",button("Request","book:Lab test",true))+it("🏥","Ultrasound abdomen","Doctor-approved · Imaging centre directory",button("Request","book:Imaging scan"))+it("💉","Home nursing programme",done+" of 7 sample visits completed",badge("In progress")))+panel("Upcoming appointment",appointments())+'</div><div>'+panel("Quick actions",quick([["🩺","Find a doctor","nav:guide"],["🧪","Book a test","book:Lab test"],["💉","Home nursing","book:Home nursing"],["📋","My reports","nav:records"]]))+panel("Care companion",it("💊","Medication guide","Only clinician-approved prescription directions are shown.",badge("Review","amber")))+'</div></div>'}
+function patientHome(){
+return '<div class="patient-welcome-content"><section class="welcome-screen"><h1 class="welcome-heading">Good evening, Ananya</h1><div class="smile">☺ <span>›</span></div><p class="welcome-sub">What can we help you take care of today?</p><div class="welcome-grid">'+
+[
+ ["▦","Schedule","New appointment","book:Doctor consultation"],
+ ["☏","Care guide","Find the right help","nav:guide"],
+ ["✚","View records","Your health reports","nav:records"],
+ ["♡","My tasks","Care plan & reminders","nav:care"]
+].map(function(x){return '<button class="welcome-tile" data-a="'+x[3]+'"><span class="glyph">'+x[0]+'</span><span><strong>'+x[1]+'</strong><small>'+x[2]+'</small></span></button>'}).join("")+
+'</div></section><section class="warm-section"><div class="warm-header"><h2>Appointments</h2><button data-a="nav:services">See all ›</button></div><div class="upcoming-card"><div class="upcoming-icon">♧</div><div class="upcoming-body"><strong>Follow-up consultation</strong><small>'+esc(appointment)+'</small><small>Dr. Meera Rao</small></div><div class="upcoming-right">'+badge("Upcoming")+'<b>›</b></div></div></section></div>'+
+'<h2 class="care-heading">Your care, all in one place</h2>'+stats([["Pending tests","02","Doctor-approved orders"],["Nursing progress",done+"/7","Demo visit tracker"],["Health updates",unreadFor("patient"),"For your review"]])+
+'<div class="two"><div>'+panel("Next steps",it("🧪","HbA1c blood test","Approved order · Home collection may be available",button("Request","book:Lab test",true))+it("🏥","Ultrasound abdomen","Approved order · Find a scan centre",button("Request","book:Imaging scan"))+it("💉","Home nursing",done+" of 7 simulated visits recorded",badge("In progress")))+panel("My health updates",infoFeed("patient",3))+'</div><div>'+panel("Your care companion",quick([["💊","Prescription guide","nav:records"],["📅","Visit schedule","nav:care"],["🧪","Labs & scans","nav:services"],["🩺","Choose specialist","nav:guide"]]))+'</div></div>';
+}
 function patientCare(){return head("MY TREATMENT JOURNEY","Your care plan","Follow the next steps from consultation through recovery.")+panel("Your shared timeline",it("✅","Doctor consultation","11 Nov 2026 · Fictional completed visit",badge("Completed"))+it("🧪","Lab & imaging tests","HbA1c blood test · Ultrasound abdomen",badge("Approved"))+it("💉","Home nursing visits","Authorised sample monitoring plan",badge("In progress"))+it("📅","Follow-up appointment",appointment,badge("Scheduled")))+panel("Home nursing schedule · Example",'<div style="display:flex;justify-content:space-between"><strong>'+done+' of 7 demo visits</strong><span class="muted">No clinical administration is recorded</span></div><div class="progress"><div style="width:'+(100*done/7)+'%"></div></div><div class="days">'+Array.from({length:7},function(_,i){return '<button class="day '+(i<done?"done":i===done?"next":"")+'" data-a="day:'+i+'">'+(i<done?"✓":i+1)+'</button>'}).join("")+'</div><div class="notes">Tap a day to simulate status. Actual injections require clinician orders, qualified staff and a verified administration record.</div>')+panel("Doctor-approved orders",it("🧪","HbA1c blood test","Order present in fictional care plan",badge("Approved"))+it("🏥","Ultrasound abdomen","Order present in fictional care plan",badge("Approved"))+it("💙","Home nursing monitoring","Example visit plan · Not an injection prescription",badge("Approved")))}
 function patientServices(){return head("DISCOVER CARE","Services & providers","Explore sample care options matched to doctor-approved orders.")+quick([["🩺","Care navigation","nav:guide"],["🧪","Request blood test","book:Lab test"],["🏥","Request scan","book:Imaging scan"],["💉","Request home nurse","book:Home nursing"]])+ '<div style="height:15px"></div>'+panel("Sample provider directory",it("🧪","Asha Diagnostics","Indiranagar, Bengaluru · Example ₹450 HbA1c",button("Request","book:Lab test",true))+it("🏥","City Imaging Studio","Jayanagar, Bengaluru · Scan pricing not connected",button("Request","book:Imaging scan"))+it("💉","Care at Home Network","Bengaluru · Sample nursing directory",button("Request","book:Home nursing")))+panel("My service requests",bookings.length?bookings.map(function(b){return it("📋",b.type,b.when,badge(b.status,b.status==="Requested"?"amber":""))}).join(""):'<p class="muted">No booking requests yet. These are demonstration-only; no partners are contacted.</p>')+'<div class="caution">All providers are fictional and unverified. Sample prices are illustrative, not real quotes.</div>'}
 function patientRecords(){return head("YOUR MEDICAL HISTORY","Health records","Doctor-approved documents, reports and medication information.")+panel("Clinical records",it("📄","Consultation summary","11 Nov 2026 · Dr. Meera Rao",badge("Approved"))+(approvedNote?it("📄","New approved clinical note",pendingNote,badge("Approved")):"")+it("💊","Prescription directions","No signed prescription created in this preview",badge("Not issued","grey")))+panel("Diagnostic reports",reports.filter(function(r){return r.approved}).map(function(r){return it("🧪",r.title,r.comment,badge("Reviewed"))}).join("")||'<p class="muted">Doctor-reviewed reports will appear here after partner submission and clinician release.</p>')+panel("Record access","<p class='muted'>Production family sharing and health-record exchange require verified patient consent and access controls. Do not upload real health information here.</p>")}
 function patientGuide(){return head("CARE NAVIGATION","Find the appropriate care","Educational guidance to help choose where to start. It is not a diagnostic or emergency triage tool.")+panel("What type of help do you need?",'<div class="cards">'+[["👂","Ear or hearing concerns","A clinician may consider ENT evaluation depending on symptoms."],["🦴","Joint or injury concerns","A clinician may consider orthopaedic or musculoskeletal assessment."],["💓","Heart-related symptoms","Severe chest pain or breathing difficulty warrants emergency assessment."],["🩺","Unclear or multiple symptoms","A GP / family physician is often the best first contact."]].map(function(x){return '<div class="card"><h3>'+x[0]+' '+x[1]+'</h3><p>'+x[2]+'</p>'+button("View guidance","guide:"+x[1])+'</div>'}).join("")+'</div>')+'<div class="caution danger">For severe chest pain, difficulty breathing, signs of stroke, heavy bleeding or other emergencies, seek emergency medical care immediately. Do not rely on this demo for urgent decisions.</div>'}
-function doctorHome(){return head("DOCTOR WORKSPACE","Good evening, Doctor","Your patients and consultations, organised around care continuity.")+stats([["Assigned patients","02","Demo patient records"],["Clinical drafts",approvedNote?"00":"01","Require approval"],["Results awaiting review",reports.filter(function(r){return !r.approved}).length,"Fictional lab reports"]])+hero("CLINIC WORKSPACE","Give your patients time, not paperwork.","Draft documentation and verify it before any instructions are shared.","Start clinical notes →","scribe")+'<div class="two"><div>'+panel("Today's patient queue",it("👩","Ananya Sharma","10:30 AM · Follow-up",badge("Checked in"))+it("👨","Rohit Nair","11:15 AM · New consultation",badge("Scheduled")))+panel("Treatment overview",it("🧪","HbA1c blood test","Ananya Sharma · Doctor-approved sample",badge("Approved"))+it("💉","Nursing monitoring plan","Ananya Sharma · 7 demo visits",badge("Active")))+'</div><div>'+panel("Quick actions",quick([["📝","Consultation notes","nav:scribe"],["💊","Medicine library","nav:meds"],["🧪","Clinical orders","nav:orders"],["📋","Patient directory","nav:patients"]]))+'</div></div>'}
+function doctorHome(){
+var due=reports.filter(function(r){return !r.approved}).length;var visits=doctorVisits.slice().sort(function(a,b){return clockMinutes(a.time)-clockMinutes(b.time)});
+return '<div class="doctor-hero"><div><div class="eyebrow">DOCTOR WORKSPACE</div><h1>Good evening, Doctor</h1><p>Your clinics, appointments and patient updates in one view.</p></div>'+button("View my clinics →","nav:clinics",true)+'</div>'+
+stats([["Today's appointments",doctorVisits.length,"Across "+sortedClinics().length+" active clinics"],["Results to review",due,"Need doctor approval"],["Unread updates",unreadFor("doctor"),"Clinic & patient activity"]])+
+'<div class="two"><div>'+
+panel("Today's clinic sessions",'<div class="clinic-grid">'+sortedClinics().map(function(c){return '<div class="clinic-card"><span class="clinic-badge">'+esc(c.start)+'–'+esc(c.end)+'</span><h3>'+esc(c.name)+'</h3><p>📍 '+esc(c.location)+'</p></div>'}).join("")+'</div><div class="btnrow">'+button("Manage clinics & travel","nav:clinics")+'</div>')+
+panel("Consolidated appointment queue",visits.map(function(v){var c=doctorClinics.find(function(t){return t.id===v.clinicId});return it("👤",v.patient,v.time+" · "+(c?c.name:"Unassigned"),badge(v.reason))}).join("")+ '<div class="btnrow">'+button("+ Appointment","visit-add")+'</div>')+
+'</div><div>'+
+panel("Patient updates",infoFeed("doctor",3)+'<div class="btnrow">'+button("View all updates →","nav:inbox",true)+'</div>')+
+panel("Quick actions",quick([["📝","Clinical notes","nav:scribe"],["💊","Medicine library","nav:meds"],["🧪","Review results","nav:orders"],["🏥","Clinic schedule","nav:clinics"]]))+
+'</div></div>'+panel("Between-clinic travel",transitionHtml());
+}
 function doctorPatients(){return head("PATIENT DIRECTORY","My patients","Access assigned patient records and past treatment plans.")+panel("Assigned patients",it("👩","Ananya Sharma","Age 32 · Recorded allergy: Penicillin · Fictional data",button("Clinical notes","nav:scribe",true))+it("👨","Rohit Nair","Age 41 · Medical history not populated",button("Clinical notes","nav:scribe")))+panel("Appointments",appointments())}
 function doctorScribe(){return head("CLINICAL DOCUMENTATION","Consultation notes","Draft, review and approve. No AI diagnosis or prescribing occurs here.")+panel("Active patient",it("👩","Ananya Sharma","Age 32 · Penicillin allergy flagged",badge("Demo","amber")))+panel("Visit documentation",'<label class="label" for="notearea">Clinical observations and plan</label>'+textField("Enter clinician-authored history, findings, assessment and plan. Nothing is automatically inferred.","notearea")+'<div class="btnrow">'+button("Save unsigned draft","note-save")+button("Approve demo note","note-approve",true)+'</div><p class="notes">Voice transcription and medical-grade review are not connected. Approval is a simulated workflow, not a legal signature.</p>')+panel("Note status",it("📄","Patient consultation",approvedNote?"Doctor-approved demonstration note":pendingNote?"Unsigned draft exists":"No new draft saved",badge(approvedNote?"Approved":pendingNote?"Draft":"Not started",approvedNote?"":"amber")))}
 function doctorMeds(){var matches=medicines.filter(function(m){return (m.name+" "+m.category+" "+m.uses).toLowerCase().indexOf(medQuery.toLowerCase())>=0}),m=medicines.find(function(x){return x.name===selection})||medicines[0];return head("CLINICAL REFERENCE","Medicine library","Search educational generic entries and create unsigned prescription ideas.")+panel("Patient safety context",it("⚠","Ananya Sharma","Recorded allergy: Penicillin · Medication and clinical history incomplete",badge("Review","amber")))+ '<input class="search" id="medsearch" aria-label="Search medicines" placeholder="⌕ Search generic names, categories and clinical uses..." value="'+esc(medQuery)+'"><div class="meds"><section class="panel"><div class="ph"><h2>Medicine catalogue</h2><span class="muted">'+matches.length+' sample entries</span></div>'+matches.map(function(x){return '<button class="medrow '+(x.name===selection?"active":"")+'" data-med="'+esc(x.name)+'"><span class="iicon">💊</span><span class="itxt"><strong>'+esc(x.name)+'</strong><small>'+esc(x.category)+' · '+esc(x.form)+'</small></span>›</button>'}).join("")+'</section><section class="panel detail"><span class="chip grey">Educational demo</span><h2 style="margin-top:12px">'+esc(m.name)+'</h2><span class="chip">'+esc(m.category)+'</span><div class="label">Formulations</div><div class="value">'+esc(m.form)+'</div><div class="label">Common uses</div><div class="value">'+esc(m.uses)+'</div><div class="label">Review points and adverse effects</div><div class="value">'+esc(m.risks)+'</div><div class="label">Indian brand names, doses and interactions</div><div class="value">Not connected to a licensed formulary. No dosing recommendations are generated.</div><div class="caution '+(m.blocked?"danger":"")+'">'+(m.blocked?"Potential allergy conflict in the sample patient. This medicine cannot be added to the demo draft.":"No comprehensive interaction or contraindication check has been performed.")+'</div><button class="btn primary" style="width:100%" data-a="med-add" '+(m.blocked?"disabled":"")+'>+ Add to unsigned draft</button></section></div>'+panel("Unsigned draft",rx.length?rx.map(function(n){return it("💊",n,"Selected for doctor review · No dose or prescription issued",badge("Unsigned","amber"))}).join(""):'<p class="muted">Select medicines above to see draft entries here. No patient-facing prescription is generated.</p>')}
@@ -80,10 +255,10 @@ function adminHome(){return head("CARE OPERATIONS","Operations centre","One view
 function adminRequests(){return head("SERVICE OPERATIONS","Requests & confirmations","A shared queue for fictional partner fulfilment.")+panel("All patient requests",bookings.map(function(b){return it("📋",b.type,b.when,badge(b.status,b.status==="Requested"?"amber":""))}).join("")||'<p class="muted">No bookings submitted.</p>')}
 function adminNurses(){return head("HOME CARE OPERATIONS","Nursing coordination","Track visit progress and scheduling against a sample approved order.")+panel("Ananya Sharma · Home nursing",it("💙","Observation visits",done+" of 7 simulated visits completed",badge("Active"))+'<div class="progress"><div style="width:'+(100*done/7)+'%"></div></div>'+button("Open nurse workspace","role:nurse",true))+panel("Safety gates",it("📋","Doctor approval","Required before scheduling treatment")+it("🪪","Credential verification","Not available in this preview",badge("Not connected","amber")))}
 function adminProviders(){return head("PARTNER DIRECTORY","Provider network","Illustrative partners only; no real service validation.")+panel("Providers",it("🧪","Asha Diagnostics","Example laboratory · Bengaluru",badge("Unverified","amber"))+it("🏥","City Imaging Studio","Example imaging centre · Bengaluru",badge("Unverified","amber"))+it("💉","Care at Home Network","Example nursing directory · Bengaluru",badge("Unverified","amber")))}
-var views={patient:{home:patientHome,care:patientCare,services:patientServices,records:patientRecords,guide:patientGuide},doctor:{home:doctorHome,patients:doctorPatients,scribe:doctorScribe,meds:doctorMeds,orders:doctorOrders},nurse:{home:nurseHome,visits:nurseVisits,schedule:nurseSchedule},lab:{home:labHome,requests:labRequests,results:labResults},admin:{home:adminHome,requests:adminRequests,nurses:adminNurses,providers:adminProviders}};
+var views={patient:{home:patientHome,care:patientCare,services:patientServices,records:patientRecords,guide:patientGuide},doctor:{home:doctorHome,patients:doctorPatients,clinics:doctorClinicsPage,inbox:doctorInboxPage,scribe:doctorScribe,meds:doctorMeds,orders:doctorOrders},nurse:{home:nurseHome,visits:nurseVisits,schedule:nurseSchedule},lab:{home:labHome,requests:labRequests,results:labResults},admin:{home:adminHome,requests:adminRequests,nurses:adminNurses,providers:adminProviders}};
 function render(){
  var ms=menus[role];if(!views[role][page])page="home";
- $("sidenav").innerHTML=ms.map(function(n){return '<button class="nav '+(n[0]===page?"active":"")+'" data-nav="'+n[0]+'"><span class="ni">'+n[1]+'</span>'+n[2]+'</button>'}).join("");
+ $("sidenav").innerHTML=ms.map(function(n){return '<button class="nav '+(n[0]===page?"active":"")+'" data-nav="'+n[0]+'"><span class="ni">'+n[1]+'</span>'+n[2]+(role==="doctor"&&n[0]==="inbox"&&unreadFor("doctor")?" · "+unreadFor("doctor"):"")+'</button>'}).join("");
  $("bottomnav").innerHTML=ms.map(function(n){return '<button class="'+(n[0]===page?"active":"")+'" data-nav="'+n[0]+'"><span>'+n[1]+'</span>'+n[2]+'</button>'}).join("");
  $("topname").textContent=ms.find(function(x){return x[0]===page})[2];
  $("content").innerHTML=views[role][page]();
