@@ -12,3 +12,6 @@ Default mode never calls the generative model. Six capability profiles, 31 curat
 
 ## v0.7 weighted query planner
 Five numerical domains; typed slots, restricted arithmetic expression trees, recursive dependency planning with bounded alternate paths, cost and structural weights, minimum-weight propagation, lazy SHA-256 domain packs, explicit evidence and assumption display, consistency checks, local rule counters used for route ranking. These counters are correlated formula checks, not independent truth or accuracy calibration. Natural language extraction is grammar-based; coverage is limited. Unrecognized requests fall back to v0.6. No browser/device benchmark performed.
+
+## v0.9 weighted model routing and acquisition
+Combines the unfinished v0.8 learning path with opt-in automatic model selection. Task-specific prior scores, conservative device tiers, completion feedback and one model per request. Indexed/derived knowledge and acquired IndexedDB alias records take precedence. Teacher produces bounded JSON definitions; schema-valid output remains unverified, never executable. Worker released immediately. Unknown RAM uses conservative defaults, and RAM thresholds are heuristics not real free-memory measurements. No direct weight slicing, factual validation or actual browser inference benchmark yet.
