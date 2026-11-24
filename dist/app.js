@@ -39,7 +39,7 @@ return;if(q.length>20000){
 $('status').textContent='Maximum 20,000 characters';
 return;
 }busy=true;controller=new AbortController();stop.hidden=false;send.disabled=true;mode.disabled=true;prompt.value='';bubble('user',q);const wait=bubble('assistant','Thinking…');$('status').textContent='Processing locally';try{
-const modulePath='./conversation-v04.js';const {chat}=await import(modulePath);let streamed='';const r=await chat(engine,state,history,q,mode.value,text=>{$('status').textContent=text;},text=>{streamed+=text;const body=wait.querySelector('div');if(body)body.textContent=streamed;},controller.signal);if(r.detail!=='Stopped by user')history.push({role:'user',content:q},{role:'assistant',content:r.answer});if(history.length>24)history.splice(0,history.length-24);
+const modulePath='./conversation-v041.js';const {chat}=await import(modulePath);let streamed='';const r=await chat(engine,state,history,q,mode.value,text=>{$('status').textContent=text;},text=>{streamed+=text;const body=wait.querySelector('div');if(body)body.textContent=streamed;},controller.signal);if(r.detail!=='Stopped by user')history.push({role:'user',content:q},{role:'assistant',content:r.answer});if(history.length>24)history.splice(0,history.length-24);
 wait.remove();
 bubble('assistant',r.answer,r);
 state.last=r.answer;

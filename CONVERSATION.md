@@ -1,2 +1,5 @@
 # v0.4
 Short ambiguous messages and greetings are routed locally. Token budgets 48/112/192, 45-second generation cap, 180-second load cap, stop button, worker termination and repetition detection. Light uses SmolLM2 360M; Better uses Qwen2.5 0.5B Instruct ONNX q4 (786 MB weights). Both still experimental, no quality guarantee. No browser inference benchmark was performed. Original custom skills remain. Tests cover pure guards; browser worker cancellation and model inference require device testing.
+
+## v0.4.1
+Fixed unescaped apostrophe in the conversation system prompt which prevented the module from parsing. Added versioned module URL and service worker cache revision, plus regression import and greeting tests.
