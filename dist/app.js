@@ -8,6 +8,8 @@ state={...fresh(),...JSON.parse(localStorage.getItem('modular-chat-state')||'{}'
 }
 catch{}
 ;
+const history=[];
+const mode=$('mode');
 const messages=$('messages'),prompt=$('prompt'),send=$('send');
 function bubble(role,text,result){const el=document.createElement('article');el.className='bubble '+role;const label=document.createElement('small');label.textContent=role==='user'?'You':'Modular AI';const body=document.createElement('div');body.textContent=text;el.append(label,body);if(result){
 const meta=document.createElement('details');
@@ -33,8 +35,8 @@ async function ask(){const q=prompt.value.trim();if(!ready||busy||!q)
 return;if(q.length>20000){
 $('status').textContent='Maximum 20,000 characters';
 return;
-}busy=true;send.disabled=true;prompt.value='';bubble('user',q);const wait=bubble('assistant','Thinking…');$('status').textContent='Processing locally';try{
-const r=await respond(engine,state,q);
+}busy=true;send.disabled=true;mode.disabled=true;prompt.value='';bubble('user',q);const wait=bubble('assistant','Thinking…');$('status').textContent='Processing locally';try{
+const modulePath='./conversation.js';const {chat}=await import(modulePath);let streamed='';const r=await chat(engine,state,history,q,mode.value,text=>{$('status').textContent=text;},text=>{streamed+=text;const body=wait.querySelector('div');if(body)body.textContent=streamed;});history.push({role:'user',content:q},{role:'assistant',content:r.answer});if(history.length>24)history.splice(0,history.length-24);
 wait.remove();
 bubble('assistant',r.answer,r);
 state.last=r.answer;
@@ -46,11 +48,12 @@ catch{}
 }
 catch(e){
 wait.remove();
-bubble('assistant','I could not complete that request: '+(e instanceof Error?e.message:String(e)));
+bubble('assistant','The local model or skill could not complete that request. Try the Original mode or a smaller model. Details: '+(e instanceof Error?e.message:String(e)));
 }
 finally{
 busy=false;
 send.disabled=false;
+mode.disabled=false;
 $('status').textContent='Ready · on-device';
 stats();
 prompt.focus();
@@ -62,7 +65,7 @@ ask();
 }});
 document.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{prompt.value=b.dataset.q||'';ask();});
 $('new').onclick=()=>{if(busy)
-return;state=fresh();localStorage.removeItem('modular-chat-state');messages.replaceChildren();welcome();};
+return;state=fresh();history.length=0;localStorage.removeItem('modular-chat-state');messages.replaceChildren();welcome();};
 $('save').onclick=()=>{try{
 engine.configure($('cdn').value.trim());
 $('status').textContent=engine.cdn?'CDN configured':'Site CDN selected';
@@ -72,7 +75,7 @@ $('status').textContent=String(e);
 }};
 $('clear').onclick=async()=>{if(busy)
 return;await engine.clear();stats();};
-function welcome(){bubble('assistant','Hi! I’m Modular AI. Ask me to calculate, convert units, summarize text or explain a topic. I can remember facts you teach me and follow simple numerical steps. I’m a small experimental AI, not a general-purpose LLM.');}
+function welcome(){bubble('assistant','Hi! I’m Modular AI. We can chat naturally, explore ideas, write drafts or use my built-in skills. Compact and Balanced modes download a local language model on first use. Original mode uses only our custom TypeScript engine.');}
 welcome();
 (async()=>{try{
 await engine.init();
