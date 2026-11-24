@@ -15,7 +15,7 @@ const history=[];
 const mode=$('mode');
 const mobile=matchMedia('(pointer: coarse)').matches||/Android|iPhone|iPad/i.test(navigator.userAgent);
 const lowMemory=Number((navigator).deviceMemory||0);
-mode.value='indexed';
+mode.value='indexed';if(mobile){for(const o of Array.from(mode.options))if(o.value!=='indexed')o.disabled=true;$('neural-optin').setAttribute('disabled','');}
 const pauseTyping=$('pause-typing');pauseTyping.checked=mobile;
 let releaseModel=null;
 mode.addEventListener('change',()=>releaseModel?.());
@@ -27,7 +27,7 @@ const sum=document.createElement('summary');
 sum.textContent='Response details';
 const d=document.createElement('p');
 d.textContent=result.detail+' · '+result.verified;
-meta.append(sum,d);if(result.sparse){const x=result.sparse;const p=document.createElement('pre');p.className='query-plan';p.textContent=['CHECKPOINT '+x.total.toLocaleString()+' parameters','BUDGET '+(100*x.limit/x.total).toFixed(1)+'%','PEAK RETAINED WEIGHTS '+(100*x.peak/x.total).toFixed(1)+'%','UNIQUE WEIGHTS FETCHED '+(100*x.unique/x.total).toFixed(1)+'%','TRANSFER '+x.bytes.toLocaleString()+' weight bytes','RANGE REQUESTS '+x.requests,'EXPERT EXECUTIONS '+x.expertCalls,...x.routes.map(r=>'Layer '+r.layer+' expert '+r.id+' gate '+r.weight.toFixed(3)),'Retained tensor budget is not total browser RAM. Experts may change per token; cumulative fetch may reach 100%.'].join('\n');meta.append(p);}if(result.routing){const x=result.routing;const p=document.createElement('pre');p.className='query-plan';p.textContent=['TASK '+x.task,'DEVICE TIER '+x.deviceTier,'SELECTED '+x.selected,...x.candidates.map(c=>c.name+' | '+c.score.toFixed(3)+' | '+c.completed+'/'+c.attempts+' completed'),x.note].join('\n');meta.append(p);}if(result.plan){const plan=result.plan;const title=document.createElement('p');title.textContent='Plan status: '+plan.status+(plan.alternatives?' · '+plan.alternatives+' candidate plans':'');meta.append(title);const pre=document.createElement('pre');pre.className='query-plan';const lines=[];for(const [name,f] of Object.entries(plan.inputs||{}))lines.push('INPUT '+name+': '+f.value+' '+f.unit+' (user supplied)');for(const s of plan.steps||[])lines.push('DERIVE '+s.output+' = '+s.value.toPrecision(7)+' '+s.unit+' | '+s.formula+' | rule '+s.id);for(const c of plan.checks||[])lines.push((c.pass?'PASS ':'FAIL ')+c.label);if(Number.isFinite(plan.routeScore))lines.push('Route score: '+plan.routeScore.toFixed(3)+' (ranking, not probability)');if(Number.isFinite(plan.weakestWeight))lines.push('Weakest structural weight: '+plan.weakestWeight.toFixed(3)+' (not calibrated confidence)');for(const a of plan.assumptions||[])lines.push('ASSUMPTION '+a);pre.textContent=lines.join('\n');meta.append(pre);}
+meta.append(sum,d);if(result.evidence){const x=result.evidence;const p=document.createElement('pre');p.className='query-plan';p.textContent=['INTENT '+x.intent,'ENTITY '+x.entity,'MATCH '+x.match,'SOURCE '+x.source,'MATCH SCORE '+x.weight.toFixed(2)+' (not factual confidence)','LLM WEIGHTS LOADED 0%'].join('\n');meta.append(p);}if(result.sparse){const x=result.sparse;const p=document.createElement('pre');p.className='query-plan';p.textContent=['CHECKPOINT '+x.total.toLocaleString()+' parameters','BUDGET '+(100*x.limit/x.total).toFixed(1)+'%','PEAK RETAINED WEIGHTS '+(100*x.peak/x.total).toFixed(1)+'%','UNIQUE WEIGHTS FETCHED '+(100*x.unique/x.total).toFixed(1)+'%','TRANSFER '+x.bytes.toLocaleString()+' weight bytes','RANGE REQUESTS '+x.requests,'EXPERT EXECUTIONS '+x.expertCalls,...x.routes.map(r=>'Layer '+r.layer+' expert '+r.id+' gate '+r.weight.toFixed(3)),'Retained tensor budget is not total browser RAM. Experts may change per token; cumulative fetch may reach 100%.'].join('\n');meta.append(p);}if(result.routing){const x=result.routing;const p=document.createElement('pre');p.className='query-plan';p.textContent=['TASK '+x.task,'DEVICE TIER '+x.deviceTier,'SELECTED '+x.selected,...x.candidates.map(c=>c.name+' | '+c.score.toFixed(3)+' | '+c.completed+'/'+c.attempts+' completed'),x.note].join('\n');meta.append(p);}if(result.plan){const plan=result.plan;const title=document.createElement('p');title.textContent='Plan status: '+plan.status+(plan.alternatives?' · '+plan.alternatives+' candidate plans':'');meta.append(title);const pre=document.createElement('pre');pre.className='query-plan';const lines=[];for(const [name,f] of Object.entries(plan.inputs||{}))lines.push('INPUT '+name+': '+f.value+' '+f.unit+' (user supplied)');for(const s of plan.steps||[])lines.push('DERIVE '+s.output+' = '+s.value.toPrecision(7)+' '+s.unit+' | '+s.formula+' | rule '+s.id);for(const c of plan.checks||[])lines.push((c.pass?'PASS ':'FAIL ')+c.label);if(Number.isFinite(plan.routeScore))lines.push('Route score: '+plan.routeScore.toFixed(3)+' (ranking, not probability)');if(Number.isFinite(plan.weakestWeight))lines.push('Weakest structural weight: '+plan.weakestWeight.toFixed(3)+' (not calibrated confidence)');for(const a of plan.assumptions||[])lines.push('ASSUMPTION '+a);pre.textContent=lines.join('\n');meta.append(pre);}
 if(result.source&&/^https?:\/\//.test(result.source)){
 const a=document.createElement('a');
 a.href=result.source;
@@ -46,7 +46,7 @@ return;if(q.length>20000){
 $('status').textContent='Maximum 20,000 characters';
 return;
 }busy=true;controller=new AbortController();stop.hidden=false;send.disabled=true;mode.disabled=true;prompt.value='';bubble('user',q);const wait=bubble('assistant','Thinking…');$('status').textContent='Processing locally';try{
-const modulePath='./sparse-chat-v10.js';const adapter=await import(modulePath);releaseModel=adapter.releaseModel;let streamed='',lastPaint=0,lastStatus=0;const body=wait.querySelector('div');wait.classList.add('streaming');wait.setAttribute('aria-live','off');const r=await adapter.chat(engine,state,history,q,mode.value,text=>{const now=performance.now();if(now-lastStatus>300||!text.includes('%')){$('status').textContent=text;lastStatus=now;}},text=>{streamed+=text;const now=performance.now();if(body&&now-lastPaint>=250){body.textContent=streamed;lastPaint=now;}},controller.signal,mobile);if(r.detail!=='Stopped by user')history.push({role:'user',content:q},{role:'assistant',content:r.answer});if(history.length>24)history.splice(0,history.length-24);
+const modulePath='./safe-chat-v11.js';const adapter=await import(modulePath);releaseModel=adapter.releaseModel;let streamed='',lastPaint=0,lastStatus=0;const body=wait.querySelector('div');wait.classList.add('streaming');wait.setAttribute('aria-live','off');const r=await adapter.chat(engine,state,history,q,mode.value,text=>{const now=performance.now();if(now-lastStatus>300){$('status').textContent=text;lastStatus=now;}},text=>{streamed+=text;const now=performance.now();if(body&&now-lastPaint>=250){body.textContent=streamed;lastPaint=now;}},controller.signal,mobile);if(r.detail!=='Stopped by user')history.push({role:'user',content:q},{role:'assistant',content:r.answer});if(history.length>24)history.splice(0,history.length-24);
 wait.remove();
 bubble('assistant',r.answer,r);
 state.last=r.answer;
@@ -58,7 +58,7 @@ catch{}
 }
 catch(e){
 wait.remove();
-bubble('assistant','The local model or skill could not complete that request. Try the Original mode or a smaller model. Details: '+(e instanceof Error?e.message:String(e)));
+bubble('assistant','Request could not be completed. Details: '+(e instanceof Error?e.message:String(e)));
 }
 finally{
 busy=false;
@@ -88,8 +88,8 @@ $('status').textContent=String(e);
 }};
 $('clear').onclick=async()=>{if(busy)
 return;releaseModel?.();await engine.clear();stats();};
-$('clear-learned').onclick=async()=>{if(busy||!confirm('Delete learned concepts from this browser?'))return;const m=await import('./auto-v09.js');$('status').textContent=await m.clearLearned()?'Learned knowledge cleared':'Session cleared; persistent storage unavailable';};
-function welcome(){bubble('assistant','Hi! Query mode runs without an LLM. Sparse neural lab uses byte-range access to a pretrained MoE test checkpoint, loading only active experts under a weight budget. Select Sparse neural lab and try “Continue: Once upon”. This is a story model, not a factual assistant.');}
+$('clear-learned').onclick=async()=>{if(busy||!confirm('Delete learned concepts from this browser?'))return;const m=await import('./safe-chat-v11.js');$('status').textContent=await m.clearLearned()?'Learned knowledge cleared':'Session cleared; persistent storage unavailable';};
+function welcome(){bubble('assistant','Hi! Ask “Where is MRPL?” for a source-backed answer without an LLM. Enable Public knowledge lookup for unfamiliar public entities. Neural inference is disabled on mobile in this release.');}
 welcome();
 (async()=>{try{
 await engine.init();
