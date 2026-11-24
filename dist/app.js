@@ -8,6 +8,9 @@ state={...fresh(),...JSON.parse(localStorage.getItem('modular-chat-state')||'{}'
 }
 catch{}
 ;
+let controller=null;
+const stop=$('stop');
+stop.onclick=()=>controller?.abort();
 const history=[];
 const mode=$('mode');
 const messages=$('messages'),prompt=$('prompt'),send=$('send');
@@ -35,8 +38,8 @@ async function ask(){const q=prompt.value.trim();if(!ready||busy||!q)
 return;if(q.length>20000){
 $('status').textContent='Maximum 20,000 characters';
 return;
-}busy=true;send.disabled=true;mode.disabled=true;prompt.value='';bubble('user',q);const wait=bubble('assistant','Thinking…');$('status').textContent='Processing locally';try{
-const modulePath='./conversation.js';const {chat}=await import(modulePath);let streamed='';const r=await chat(engine,state,history,q,mode.value,text=>{$('status').textContent=text;},text=>{streamed+=text;const body=wait.querySelector('div');if(body)body.textContent=streamed;});history.push({role:'user',content:q},{role:'assistant',content:r.answer});if(history.length>24)history.splice(0,history.length-24);
+}busy=true;controller=new AbortController();stop.hidden=false;send.disabled=true;mode.disabled=true;prompt.value='';bubble('user',q);const wait=bubble('assistant','Thinking…');$('status').textContent='Processing locally';try{
+const modulePath='./conversation-v04.js';const {chat}=await import(modulePath);let streamed='';const r=await chat(engine,state,history,q,mode.value,text=>{$('status').textContent=text;},text=>{streamed+=text;const body=wait.querySelector('div');if(body)body.textContent=streamed;},controller.signal);if(r.detail!=='Stopped by user')history.push({role:'user',content:q},{role:'assistant',content:r.answer});if(history.length>24)history.splice(0,history.length-24);
 wait.remove();
 bubble('assistant',r.answer,r);
 state.last=r.answer;
@@ -52,6 +55,8 @@ bubble('assistant','The local model or skill could not complete that request. Tr
 }
 finally{
 busy=false;
+controller=null;
+stop.hidden=true;
 send.disabled=false;
 mode.disabled=false;
 $('status').textContent='Ready · on-device';
@@ -75,7 +80,7 @@ $('status').textContent=String(e);
 }};
 $('clear').onclick=async()=>{if(busy)
 return;await engine.clear();stats();};
-function welcome(){bubble('assistant','Hi! I’m Modular AI. We can chat naturally, explore ideas, write drafts or use my built-in skills. Compact and Balanced modes download a local language model on first use. Original mode uses only our custom TypeScript engine.');}
+function welcome(){bubble('assistant','Hi! What would you like to talk about? Simple greetings and built-in skills work instantly. Other messages may need a local model download. You can stop a reply anytime.');}
 welcome();
 (async()=>{try{
 await engine.init();

@@ -1,0 +1,6 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {quickReply,tokenBudget,inspectOutput} from '../public/guards-v04.js';
+test('He is clarified without model',()=>assert.match(quickReply('He',{},[]),/starting a sentence/));
+test('greeting and incomplete pronoun',()=>{assert.equal(quickReply('Hi',{},[]),'Hi! How can I help?');assert.match(quickReply('she',{},[]),/finish/);});
+test('real questions and contextual yes reach model',()=>{assert.equal(quickReply('What is gravity?',{},[]),null);assert.equal(quickReply('yes',{},[{role:'assistant'}]),null)});
+test('adaptive token cap',()=>{assert.equal(tokenBudget('Hello'),48);assert.equal(tokenBudget('Can you help me learn TypeScript?'),112);assert.equal(tokenBudget('Explain in detail'),192)});
+test('repeat, role and length cutoff',()=>{assert.equal(inspectOutput('Hello hello hello ').text,'Hello');assert.equal(inspectOutput('Good morning. Good morning. Good morning. ').text,'Good morning.');assert.equal(inspectOutput('Hello!\nUser: next').text,'Hello!');assert.equal(inspectOutput('x'.repeat(1700)).text.length,1600);assert.equal(inspectOutput('This is a normal response.').stop,false);});
