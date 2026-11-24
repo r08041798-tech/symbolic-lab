@@ -5,7 +5,8 @@ export type Manifest={reasoning?:Resource;index?:Resource;model?:Resource;versio
 export type Event={label:string;detail:string;bytes?:number};
 export type PlanEvidence={status:string;alternatives?:number;inputs?:Record<string,{value:number;unit:string}>;steps?:{id:string;output:string;value:number;unit:string;formula:string}[];checks?:{label:string;pass:boolean}[];routeScore?:number;weakestWeight?:number;assumptions?:string[]};
 export type RoutingEvidence={task:string;deviceTier:number;selected:string;candidates:{name:string;score:number;attempts:number;completed:number}[];note:string};
-export type Result={answer:string;detail:string;verified:string;source?:string;plan?:PlanEvidence;routing?:RoutingEvidence};
+export type SparseEvidence={total:number;limit:number;peak:number;unique:number;bytes:number;requests:number;expertCalls:number;routes:{layer:number;id:number;weight:number}[]};
+export type Result={sparse?:SparseEvidence;answer:string;detail:string;verified:string;source?:string;plan?:PlanEvidence;routing?:RoutingEvidence};
 export class Engine {
   manifest!:Manifest; router!:Router; learned:Example[]=[]; cdn=''; memory=new Map<string,ArrayBuffer>(); onEvent:(e:Event)=>void=()=>{}; downloaded=0; cacheHits=0;
   async init(){const r=await fetch('./manifest.json',{cache:'no-cache'});if(!r.ok)throw Error('Manifest unavailable.');this.manifest=await r.json();try{this.learned=JSON.parse(localStorage.getItem('modular-ai-examples')||'[]');this.cdn=localStorage.getItem('modular-ai-cdn')||'';}catch{}this.retrain();}
