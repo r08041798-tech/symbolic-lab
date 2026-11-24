@@ -1,0 +1,4 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {profileFor,limitHistory,budgetFor} from '../public/performance-v05.js';import {chat,buildMessages} from '../dist/conversation-v05.js';
+test('mobile budget and idle release policy',()=>{const p=profileFor('compact',true);assert.equal(p.tokens,64);assert.equal(p.context,1800);assert.equal(p.idle,25000);assert.equal(budgetFor('Explain in detail',p),96);assert.equal(profileFor('lite',true).tokens,40);});
+test('conversation context stays bounded',()=>{const p=profileFor('lite',true);const h=Array.from({length:20},(_,i)=>({role:i%2?'assistant':'user',content:'x'.repeat(300)}));assert.equal(limitHistory(h,'question',p).length,2);assert.ok(buildMessages(h,{facts:{}},'question',p).length<=4);});
+test('greeting without worker',async()=>{assert.equal((await chat({}, {facts:{}},[],'Hi','lite',()=>{},()=>{},undefined,true)).answer,'Hi! How can I help?');});

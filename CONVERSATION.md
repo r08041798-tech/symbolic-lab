@@ -3,3 +3,6 @@ Short ambiguous messages and greetings are routed locally. Token budgets 48/112/
 
 ## v0.4.1
 Fixed unescaped apostrophe in the conversation system prompt which prevented the module from parsing. Added versioned module URL and service worker cache revision, plus regression import and greeting tests.
+
+## v0.5 mobile performance
+Worker stream batching at 250 ms, progress throttle, no smooth scroll or mobile autofocus, capped DOM history, reduced phone context and output budget, idle worker termination, release on model switch/hidden tab/new chat/cache clear, optional cancel on typing enabled on phones, 135M q8 fallback. These mitigate but cannot guarantee absence of OS-level resource contention. Actual phone benchmark pending.
