@@ -9,3 +9,6 @@ Worker stream batching at 250 ms, progress throttle, no smooth scroll or mobile 
 
 ## v0.6 indexed intelligence
 Default mode never calls the generative model. Six capability profiles, 31 curated topic records, hierarchical domain paths and aliases, SHA-256 checked catalog and individually loaded topic chunks, session-only version-keyed answer reuse, topic follow-ups and two-topic comparisons. Optional neural fallback requires explicit selection. Alias matching is deterministic, not a learned semantic embedding system; unsupported questions abstain. The curated notes have not been independently fact-checked for this release. No phone benchmark performed.
+
+## v0.7 weighted query planner
+Five numerical domains; typed slots, restricted arithmetic expression trees, recursive dependency planning with bounded alternate paths, cost and structural weights, minimum-weight propagation, lazy SHA-256 domain packs, explicit evidence and assumption display, consistency checks, local rule counters used for route ranking. These counters are correlated formula checks, not independent truth or accuracy calibration. Natural language extraction is grammar-based; coverage is limited. Unrecognized requests fall back to v0.6. No browser/device benchmark performed.

@@ -5,3 +5,5 @@
 #stop{background:#9b2c2c;color:white;border:0;border-radius:8px;padding:8px 12px}#stop[hidden]{display:none}
 
 .pause-label{display:flex;align-items:center;gap:6px;font-size:12px}.pause-label input{margin:0;accent-color:#183b32}.bubble{flex-shrink:0;contain:layout style}.streaming{overflow-anchor:none}#messages{overscroll-behavior:contain;scroll-behavior:auto}textarea{font-size:16px}@media(max-width:760px){#composer{box-shadow:none}#messages{max-height:40dvh;min-height:140px}}
+
+.query-plan{white-space:pre-wrap;overflow-wrap:anywhere;background:#f1f4f2;padding:10px;border-radius:8px;font-size:11px;max-height:340px;overflow:auto}

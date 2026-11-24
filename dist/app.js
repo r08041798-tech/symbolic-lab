@@ -27,7 +27,7 @@ const sum=document.createElement('summary');
 sum.textContent='Response details';
 const d=document.createElement('p');
 d.textContent=result.detail+' · '+result.verified;
-meta.append(sum,d);
+meta.append(sum,d);if(result.plan){const plan=result.plan;const title=document.createElement('p');title.textContent='Plan status: '+plan.status+(plan.alternatives?' · '+plan.alternatives+' candidate plans':'');meta.append(title);const pre=document.createElement('pre');pre.className='query-plan';const lines=[];for(const [name,f] of Object.entries(plan.inputs||{}))lines.push('INPUT '+name+': '+f.value+' '+f.unit+' (user supplied)');for(const s of plan.steps||[])lines.push('DERIVE '+s.output+' = '+s.value.toPrecision(7)+' '+s.unit+' | '+s.formula+' | rule '+s.id);for(const c of plan.checks||[])lines.push((c.pass?'PASS ':'FAIL ')+c.label);if(Number.isFinite(plan.routeScore))lines.push('Route score: '+plan.routeScore.toFixed(3)+' (ranking, not probability)');if(Number.isFinite(plan.weakestWeight))lines.push('Weakest structural weight: '+plan.weakestWeight.toFixed(3)+' (not calibrated confidence)');for(const a of plan.assumptions||[])lines.push('ASSUMPTION '+a);pre.textContent=lines.join('\n');meta.append(pre);}
 if(result.source&&/^https?:\/\//.test(result.source)){
 const a=document.createElement('a');
 a.href=result.source;
@@ -46,7 +46,7 @@ return;if(q.length>20000){
 $('status').textContent='Maximum 20,000 characters';
 return;
 }busy=true;controller=new AbortController();stop.hidden=false;send.disabled=true;mode.disabled=true;prompt.value='';bubble('user',q);const wait=bubble('assistant','Thinking…');$('status').textContent='Processing locally';try{
-const modulePath='./indexed-v06.js';const adapter=await import(modulePath);releaseModel=adapter.releaseModel;let streamed='',lastPaint=0,lastStatus=0;const body=wait.querySelector('div');wait.classList.add('streaming');wait.setAttribute('aria-live','off');const r=await adapter.chat(engine,state,history,q,mode.value,text=>{const now=performance.now();if(now-lastStatus>300||!text.includes('%')){$('status').textContent=text;lastStatus=now;}},text=>{streamed+=text;const now=performance.now();if(body&&now-lastPaint>=250){body.textContent=streamed;lastPaint=now;}},controller.signal,mobile);if(r.detail!=='Stopped by user')history.push({role:'user',content:q},{role:'assistant',content:r.answer});if(history.length>24)history.splice(0,history.length-24);
+const modulePath='./query-v07.js';const adapter=await import(modulePath);releaseModel=adapter.releaseModel;let streamed='',lastPaint=0,lastStatus=0;const body=wait.querySelector('div');wait.classList.add('streaming');wait.setAttribute('aria-live','off');const r=await adapter.chat(engine,state,history,q,mode.value,text=>{const now=performance.now();if(now-lastStatus>300||!text.includes('%')){$('status').textContent=text;lastStatus=now;}},text=>{streamed+=text;const now=performance.now();if(body&&now-lastPaint>=250){body.textContent=streamed;lastPaint=now;}},controller.signal,mobile);if(r.detail!=='Stopped by user')history.push({role:'user',content:q},{role:'assistant',content:r.answer});if(history.length>24)history.splice(0,history.length-24);
 wait.remove();
 bubble('assistant',r.answer,r);
 state.last=r.answer;
@@ -88,7 +88,7 @@ $('status').textContent=String(e);
 }};
 $('clear').onclick=async()=>{if(busy)
 return;releaseModel?.();await engine.clear();stats();};
-function welcome(){bubble('assistant','Hi! I can answer indexed topics and use small skills without a language model. Try “How do solar panels work?”, “Compare React and TypeScript”, or “Show topics”. For open-ended conversation, choose an optional language model.');}
+function welcome(){bubble('assistant','Hi! I can derive answers using weighted query plans, retrieve indexed topics, and run small skills without a language model. Try the EV range example and open Response details to inspect the plan.');}
 welcome();
 (async()=>{try{
 await engine.init();
