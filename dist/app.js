@@ -15,7 +15,7 @@ const history=[];
 const mode=$('mode');
 const mobile=matchMedia('(pointer: coarse)').matches||/Android|iPhone|iPad/i.test(navigator.userAgent);
 const lowMemory=Number((navigator).deviceMemory||0);
-if(lowMemory>0&&lowMemory<=3)mode.value='lite';
+mode.value='indexed';
 const pauseTyping=$('pause-typing');pauseTyping.checked=mobile;
 let releaseModel=null;
 mode.addEventListener('change',()=>releaseModel?.());
@@ -46,7 +46,7 @@ return;if(q.length>20000){
 $('status').textContent='Maximum 20,000 characters';
 return;
 }busy=true;controller=new AbortController();stop.hidden=false;send.disabled=true;mode.disabled=true;prompt.value='';bubble('user',q);const wait=bubble('assistant','Thinking…');$('status').textContent='Processing locally';try{
-const modulePath='./conversation-v05.js';const adapter=await import(modulePath);releaseModel=adapter.releaseModel;let streamed='',lastPaint=0,lastStatus=0;const body=wait.querySelector('div');wait.classList.add('streaming');wait.setAttribute('aria-live','off');const r=await adapter.chat(engine,state,history,q,mode.value,text=>{const now=performance.now();if(now-lastStatus>300||!text.includes('%')){$('status').textContent=text;lastStatus=now;}},text=>{streamed+=text;const now=performance.now();if(body&&now-lastPaint>=250){body.textContent=streamed;lastPaint=now;}},controller.signal,mobile);if(r.detail!=='Stopped by user')history.push({role:'user',content:q},{role:'assistant',content:r.answer});if(history.length>24)history.splice(0,history.length-24);
+const modulePath='./indexed-v06.js';const adapter=await import(modulePath);releaseModel=adapter.releaseModel;let streamed='',lastPaint=0,lastStatus=0;const body=wait.querySelector('div');wait.classList.add('streaming');wait.setAttribute('aria-live','off');const r=await adapter.chat(engine,state,history,q,mode.value,text=>{const now=performance.now();if(now-lastStatus>300||!text.includes('%')){$('status').textContent=text;lastStatus=now;}},text=>{streamed+=text;const now=performance.now();if(body&&now-lastPaint>=250){body.textContent=streamed;lastPaint=now;}},controller.signal,mobile);if(r.detail!=='Stopped by user')history.push({role:'user',content:q},{role:'assistant',content:r.answer});if(history.length>24)history.splice(0,history.length-24);
 wait.remove();
 bubble('assistant',r.answer,r);
 state.last=r.answer;
@@ -88,7 +88,7 @@ $('status').textContent=String(e);
 }};
 $('clear').onclick=async()=>{if(busy)
 return;releaseModel?.();await engine.clear();stats();};
-function welcome(){bubble('assistant','Hi! What would you like to talk about? Simple greetings and built-in skills work instantly. Other messages may need a local model download. You can stop a reply anytime.');}
+function welcome(){bubble('assistant','Hi! I can answer indexed topics and use small skills without a language model. Try “How do solar panels work?”, “Compare React and TypeScript”, or “Show topics”. For open-ended conversation, choose an optional language model.');}
 welcome();
 (async()=>{try{
 await engine.init();

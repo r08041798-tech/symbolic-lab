@@ -1,0 +1,1 @@
+{"id":"probability","domain":"math/fundamentals","title":"Probability","brief":"Probability is a numerical measure of how likely an event is, ranging from zero to one.","detail":"For equally likely outcomes, divide the number of favorable outcomes by the total number of outcomes.","example":"A fair six-sided die has probability 1/6 of rolling a three."}

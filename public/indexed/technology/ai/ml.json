@@ -1,0 +1,1 @@
+{"id":"ml","domain":"technology/ai","title":"Machine learning","brief":"Machine learning uses data to fit models that can make predictions or decisions.","detail":"Training adjusts parameters using examples or other feedback. Generalization must be evaluated on data not used for training.","example":"A spam classifier learns patterns from labeled emails."}

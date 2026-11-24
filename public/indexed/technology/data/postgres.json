@@ -1,0 +1,1 @@
+{"id":"postgres","domain":"technology/data","title":"PostgreSQL","brief":"PostgreSQL is an open-source relational database management system.","detail":"It supports SQL, transactions, indexing, constraints, extensions and multiple data types.","example":"An application can store customers and orders in PostgreSQL tables.","source":"https://www.postgresql.org/docs/"}

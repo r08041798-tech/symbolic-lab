@@ -1,7 +1,7 @@
 import {Router,choose,type Example} from './router.js';
 export type Resource={path:string;sha256:string;bytes:number};
 export type Skill={id:string;name:string;module:Resource;knowledge?:Resource;examples:string[]};
-export type Manifest={model?:Resource;version:string;skills:Skill[];coreBytes:number};
+export type Manifest={index?:Resource;model?:Resource;version:string;skills:Skill[];coreBytes:number};
 export type Event={label:string;detail:string;bytes?:number};
 export type Result={answer:string;detail:string;verified:string;source?:string};
 export class Engine {

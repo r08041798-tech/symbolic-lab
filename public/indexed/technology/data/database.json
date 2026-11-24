@@ -1,0 +1,1 @@
+{"id":"database","domain":"technology/data","title":"Relational database","brief":"A relational database organizes data into relations, typically represented as tables.","detail":"SQL can query and update records. Keys, constraints and transactions help maintain data consistency.","example":"An orders table may reference customers through a foreign key."}

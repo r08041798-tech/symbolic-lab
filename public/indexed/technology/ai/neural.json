@@ -1,0 +1,1 @@
+{"id":"neural","domain":"technology/ai","title":"Neural networks","brief":"Neural networks are parameterized computational models composed of connected transformations.","detail":"Training often adjusts weights using gradients to reduce a loss function. Different architectures suit different tasks.","example":"An image classifier can learn to recognize visual patterns."}
